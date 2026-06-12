@@ -56,6 +56,25 @@ export function fmtDate(d: Date, locale: "pt" | "en") {
   return format(d, locale === "pt" ? "dd 'de' MMMM" : "MMM dd");
 }
 
+export function phaseForDate(s: CycleSettings, date: Date): Phase {
+  const start = new Date(s.last_period_start + "T00:00:00");
+  const t = new Date(date.toISOString().slice(0, 10) + "T00:00:00");
+  const diff = differenceInCalendarDays(t, start);
+  // Support dates before DUM by walking back full cycles
+  const cyclesPassed = Math.floor(diff / s.cycle_length);
+  const currentStart = addDays(start, cyclesPassed * s.cycle_length);
+  const cycleDay = differenceInCalendarDays(t, currentStart) + 1;
+  const nextPeriodDate = addDays(currentStart, s.cycle_length);
+  const ovulationDate = addDays(nextPeriodDate, -14);
+  const fertileStart = addDays(ovulationDate, -3);
+  const fertileEnd = addDays(ovulationDate, 1);
+  if (cycleDay <= s.period_length) return "menstrual";
+  if (t >= fertileStart && t <= fertileEnd) return "ovulatory";
+  if (t < fertileStart) return "follicular";
+  return "luteal";
+}
+
+
 export const FLOWS = ["none", "spotting", "light", "moderate", "heavy"] as const;
 export const SYMPTOMS = ["cramps", "headache", "breast", "acne", "bloating", "fatigue"] as const;
 export const MOODS = ["calm", "happy", "sensitive", "irritated", "anxious", "down"] as const;
