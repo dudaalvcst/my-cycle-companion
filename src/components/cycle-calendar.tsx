@@ -145,6 +145,14 @@ export function CycleCalendar({ settings }: { settings: CycleSettings }) {
             <span className="text-muted-foreground">{t(PHASE_KEYS[p])}</span>
           </div>
         ))}
+        <div className="inline-flex items-center gap-1.5">
+          <span
+            className="inline-block h-2.5 w-2.5 rounded-full ring-2 ring-offset-1 ring-offset-background"
+            style={{ background: PHASE_TOKENS.ovulatory, boxShadow: `0 0 0 1px ${PHASE_TOKENS.ovulatory}` }}
+            aria-hidden
+          />
+          <span className="text-muted-foreground">{t("calendar.ovulation")}</span>
+        </div>
       </div>
 
       <p className="mt-4 text-xs text-muted-foreground">{t("disclaimer")}</p>
