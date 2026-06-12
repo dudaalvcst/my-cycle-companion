@@ -95,22 +95,35 @@ export function CycleCalendar({ settings }: { settings: CycleSettings }) {
           const phase = phaseForDate(settings, day);
           const inMonth = isSameMonth(day, cursor);
           const isToday = isSameDay(day, today);
+          const isOvu = isOvulationDay(settings, day);
           const color = PHASE_TOKENS[phase];
+          const ovuColor = PHASE_TOKENS.ovulatory;
+          const label = `${format(day, "PP", { locale: dfLocale })} — ${t(PHASE_KEYS[phase])}${isOvu ? ` · ${t("calendar.ovulation")}` : ""}`;
           return (
             <div
               key={day.toISOString()}
               className="aspect-square flex items-center justify-center"
-              title={`${format(day, "PP", { locale: dfLocale })} — ${t(PHASE_KEYS[phase])}`}
+              title={label}
             >
               <div
                 className="relative flex h-full w-full items-center justify-center rounded-xl text-sm transition"
                 style={{
-                  background: inMonth
+                  background: isOvu
+                    ? `radial-gradient(circle at center, ${ovuColor} 0%, ${ovuColor} 55%, color-mix(in oklch, ${color} 30%, transparent) 100%)`
+                    : inMonth
                     ? `color-mix(in oklch, ${color} 22%, transparent)`
                     : `color-mix(in oklch, ${color} 8%, transparent)`,
-                  color: inMonth ? undefined : "var(--muted-foreground)",
-                  boxShadow: isToday ? `inset 0 0 0 2px ${color}` : undefined,
-                  fontWeight: isToday ? 600 : 400,
+                  color: isOvu
+                    ? "var(--primary-foreground)"
+                    : inMonth
+                    ? undefined
+                    : "var(--muted-foreground)",
+                  boxShadow: isToday
+                    ? `inset 0 0 0 2px var(--foreground)`
+                    : isOvu
+                    ? `0 4px 14px color-mix(in oklch, ${ovuColor} 45%, transparent)`
+                    : undefined,
+                  fontWeight: isToday || isOvu ? 600 : 400,
                   opacity: inMonth ? 1 : 0.55,
                 }}
               >
