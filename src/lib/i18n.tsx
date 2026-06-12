@@ -1,0 +1,229 @@
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+
+export type Locale = "pt" | "en";
+
+type Dict = Record<string, string>;
+
+const PT: Dict = {
+  "app.name": "Lunaria",
+  "app.tagline": "Seu ciclo, com clareza e privacidade",
+  "nav.dashboard": "Painel",
+  "nav.diary": "Diário",
+  "nav.settings": "Ajustes",
+  "nav.signout": "Sair",
+  "auth.title": "Entre na sua conta",
+  "auth.subtitle": "Seus dados de saúde, sempre privados.",
+  "auth.email": "E-mail",
+  "auth.password": "Senha",
+  "auth.signin": "Entrar",
+  "auth.signup": "Criar conta",
+  "auth.google": "Continuar com Google",
+  "auth.toggle.signup": "Ainda não tem conta? Criar uma",
+  "auth.toggle.signin": "Já tem conta? Entrar",
+  "auth.error.invalid": "E-mail ou senha incorretos",
+  "auth.error.weak": "Senha deve ter no mínimo 8 caracteres, incluindo letras, números e caracteres especiais",
+  "auth.locked": "Para garantir a privacidade dos seus dados, faça login primeiro.",
+  "auth.divider": "ou",
+  "onboarding.title": "Vamos personalizar seu ciclo",
+  "onboarding.subtitle": "Três perguntas rápidas para começar.",
+  "onboarding.dum": "Qual o primeiro dia da sua última menstruação?",
+  "onboarding.cycle": "Quantos dias dura seu ciclo, em média?",
+  "onboarding.period": "Quantos dias dura seu fluxo, em média?",
+  "onboarding.cycle.hint": "Padrão: 28 dias",
+  "onboarding.period.hint": "Padrão: 5 dias",
+  "onboarding.next": "Continuar",
+  "onboarding.back": "Voltar",
+  "onboarding.finish": "Concluir",
+  "dashboard.hello": "Olá",
+  "dashboard.today": "Hoje você está no dia",
+  "dashboard.of.cycle": "do seu ciclo",
+  "dashboard.next.period": "Próxima menstruação prevista",
+  "dashboard.fertile.window": "Janela fértil estimada",
+  "dashboard.in.days": "em {n} dia(s)",
+  "dashboard.starts.in": "começa em {n} dia(s)",
+  "dashboard.started": "iniciada há {n} dia(s)",
+  "dashboard.log.today": "Como você está se sentindo hoje?",
+  "dashboard.log.cta": "Registrar dia",
+  "phase.menstrual": "Fase Menstrual",
+  "phase.follicular": "Fase Folicular",
+  "phase.ovulatory": "Fase Ovulatória",
+  "phase.luteal": "Fase Lútea",
+  "phase.menstrual.desc": "Dias de sangramento ativo.",
+  "phase.follicular.desc": "Do fim da menstruação até a ovulação.",
+  "phase.ovulatory.desc": "Janela fértil — ovulação por perto.",
+  "phase.luteal.desc": "Da ovulação até a próxima menstruação.",
+  "diary.title": "Diário do dia",
+  "diary.date": "Data",
+  "diary.flow": "Intensidade do fluxo",
+  "diary.symptoms": "Sintomas físicos",
+  "diary.moods": "Humor",
+  "diary.notes": "Observações (opcional)",
+  "diary.save": "Salvar registro",
+  "diary.saved": "Registro salvo",
+  "diary.history": "Últimos registros",
+  "diary.empty": "Nenhum registro ainda. Comece por hoje.",
+  "flow.none": "Nenhum",
+  "flow.spotting": "Escape",
+  "flow.light": "Leve",
+  "flow.moderate": "Moderado",
+  "flow.heavy": "Intenso",
+  "symptom.cramps": "Cólica",
+  "symptom.headache": "Dor de cabeça",
+  "symptom.breast": "Sensibilidade nos seios",
+  "symptom.acne": "Acne",
+  "symptom.bloating": "Inchaço",
+  "symptom.fatigue": "Cansaço",
+  "mood.calm": "Calma",
+  "mood.happy": "Feliz",
+  "mood.sensitive": "Sensível",
+  "mood.irritated": "Irritada",
+  "mood.anxious": "Ansiosa",
+  "mood.down": "Desanimada",
+  "disclaimer": "Esta é uma ferramenta de estimativa e não substitui consulta médica nem métodos contraceptivos.",
+  "common.cancel": "Cancelar",
+  "common.save": "Salvar",
+  "common.loading": "Carregando…",
+  "settings.title": "Ajustes",
+  "settings.language": "Idioma",
+  "settings.cycle": "Ciclo",
+  "settings.update": "Atualizar",
+  "landing.cta.signin": "Entrar",
+  "landing.cta.signup": "Criar conta grátis",
+  "landing.feature.privacy.t": "Privacidade primeiro",
+  "landing.feature.privacy.d": "Seus dados de saúde, criptografados e acessíveis só por você.",
+  "landing.feature.phase.t": "Fases do ciclo",
+  "landing.feature.phase.d": "Saiba em qual fase você está, todos os dias.",
+  "landing.feature.diary.t": "Diário de sintomas",
+  "landing.feature.diary.d": "Registre fluxo, sintomas e humor com poucos toques.",
+};
+
+const EN: Dict = {
+  "app.name": "Lunaria",
+  "app.tagline": "Your cycle, with clarity and privacy",
+  "nav.dashboard": "Dashboard",
+  "nav.diary": "Diary",
+  "nav.settings": "Settings",
+  "nav.signout": "Sign out",
+  "auth.title": "Sign in to your account",
+  "auth.subtitle": "Your health data, always private.",
+  "auth.email": "Email",
+  "auth.password": "Password",
+  "auth.signin": "Sign in",
+  "auth.signup": "Create account",
+  "auth.google": "Continue with Google",
+  "auth.toggle.signup": "No account yet? Create one",
+  "auth.toggle.signin": "Have an account? Sign in",
+  "auth.error.invalid": "Invalid email or password",
+  "auth.error.weak": "Password must be at least 8 characters with letters, numbers and special characters",
+  "auth.locked": "To protect your data privacy, please sign in first.",
+  "auth.divider": "or",
+  "onboarding.title": "Let's personalize your cycle",
+  "onboarding.subtitle": "Three quick questions to get started.",
+  "onboarding.dum": "What was the first day of your last period?",
+  "onboarding.cycle": "On average, how many days does your cycle last?",
+  "onboarding.period": "On average, how many days does your flow last?",
+  "onboarding.cycle.hint": "Default: 28 days",
+  "onboarding.period.hint": "Default: 5 days",
+  "onboarding.next": "Continue",
+  "onboarding.back": "Back",
+  "onboarding.finish": "Finish",
+  "dashboard.hello": "Hi",
+  "dashboard.today": "Today you are on day",
+  "dashboard.of.cycle": "of your cycle",
+  "dashboard.next.period": "Next period expected",
+  "dashboard.fertile.window": "Estimated fertile window",
+  "dashboard.in.days": "in {n} day(s)",
+  "dashboard.starts.in": "starts in {n} day(s)",
+  "dashboard.started": "started {n} day(s) ago",
+  "dashboard.log.today": "How are you feeling today?",
+  "dashboard.log.cta": "Log today",
+  "phase.menstrual": "Menstrual Phase",
+  "phase.follicular": "Follicular Phase",
+  "phase.ovulatory": "Ovulatory Phase",
+  "phase.luteal": "Luteal Phase",
+  "phase.menstrual.desc": "Days of active bleeding.",
+  "phase.follicular.desc": "From the end of menstruation to ovulation.",
+  "phase.ovulatory.desc": "Fertile window — ovulation is near.",
+  "phase.luteal.desc": "From ovulation to your next period.",
+  "diary.title": "Daily log",
+  "diary.date": "Date",
+  "diary.flow": "Flow intensity",
+  "diary.symptoms": "Physical symptoms",
+  "diary.moods": "Mood",
+  "diary.notes": "Notes (optional)",
+  "diary.save": "Save entry",
+  "diary.saved": "Entry saved",
+  "diary.history": "Recent entries",
+  "diary.empty": "No entries yet. Start with today.",
+  "flow.none": "None",
+  "flow.spotting": "Spotting",
+  "flow.light": "Light",
+  "flow.moderate": "Moderate",
+  "flow.heavy": "Heavy",
+  "symptom.cramps": "Cramps",
+  "symptom.headache": "Headache",
+  "symptom.breast": "Breast tenderness",
+  "symptom.acne": "Acne",
+  "symptom.bloating": "Bloating",
+  "symptom.fatigue": "Fatigue",
+  "mood.calm": "Calm",
+  "mood.happy": "Happy",
+  "mood.sensitive": "Sensitive",
+  "mood.irritated": "Irritated",
+  "mood.anxious": "Anxious",
+  "mood.down": "Down",
+  "disclaimer": "This is an estimation tool — not a substitute for medical advice or contraception.",
+  "common.cancel": "Cancel",
+  "common.save": "Save",
+  "common.loading": "Loading…",
+  "settings.title": "Settings",
+  "settings.language": "Language",
+  "settings.cycle": "Cycle",
+  "settings.update": "Update",
+  "landing.cta.signin": "Sign in",
+  "landing.cta.signup": "Create free account",
+  "landing.feature.privacy.t": "Privacy first",
+  "landing.feature.privacy.d": "Your health data, encrypted and accessible only by you.",
+  "landing.feature.phase.t": "Cycle phases",
+  "landing.feature.phase.d": "Know which phase you are in, every day.",
+  "landing.feature.diary.t": "Symptom diary",
+  "landing.feature.diary.d": "Track flow, symptoms and mood with a few taps.",
+};
+
+const DICTS: Record<Locale, Dict> = { pt: PT, en: EN };
+
+interface I18nCtx {
+  locale: Locale;
+  setLocale: (l: Locale) => void;
+  t: (key: string, vars?: Record<string, string | number>) => string;
+}
+
+const Ctx = createContext<I18nCtx | null>(null);
+
+export function I18nProvider({ children }: { children: ReactNode }) {
+  const [locale, setLocaleState] = useState<Locale>("pt");
+
+  useEffect(() => {
+    const stored = typeof window !== "undefined" ? (localStorage.getItem("locale") as Locale | null) : null;
+    if (stored === "pt" || stored === "en") setLocaleState(stored);
+  }, []);
+
+  const setLocale = (l: Locale) => {
+    setLocaleState(l);
+    if (typeof window !== "undefined") localStorage.setItem("locale", l);
+  };
+
+  const t = (key: string, vars?: Record<string, string | number>) => {
+    let str = DICTS[locale][key] ?? key;
+    if (vars) for (const k in vars) str = str.replace(`{${k}}`, String(vars[k]));
+    return str;
+  };
+
+  return <Ctx.Provider value={{ locale, setLocale, t }}>{children}</Ctx.Provider>;
+}
+
+export function useI18n() {
+  const ctx = useContext(Ctx);
+  if (!ctx) throw new Error("useI18n must be used inside I18nProvider");
+  return ctx;
+}
