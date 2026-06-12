@@ -1,4 +1,5 @@
 import { addDays, differenceInCalendarDays, format } from "date-fns";
+import { ptBR, enUS } from "date-fns/locale";
 
 export type Phase = "menstrual" | "follicular" | "ovulatory" | "luteal";
 
@@ -53,7 +54,9 @@ export function computeCycle(s: CycleSettings, today = new Date()): CycleInfo {
 }
 
 export function fmtDate(d: Date, locale: "pt" | "en") {
-  return format(d, locale === "pt" ? "dd 'de' MMMM" : "MMM dd");
+  return format(d, locale === "pt" ? "dd 'de' MMMM" : "MMM dd", {
+    locale: locale === "pt" ? ptBR : enUS,
+  });
 }
 
 export function phaseForDate(s: CycleSettings, date: Date): Phase {
@@ -72,6 +75,17 @@ export function phaseForDate(s: CycleSettings, date: Date): Phase {
   if (t >= fertileStart && t <= fertileEnd) return "ovulatory";
   if (t < fertileStart) return "follicular";
   return "luteal";
+}
+
+export function isOvulationDay(s: CycleSettings, date: Date): boolean {
+  const start = new Date(s.last_period_start + "T00:00:00");
+  const t = new Date(date.toISOString().slice(0, 10) + "T00:00:00");
+  const diff = differenceInCalendarDays(t, start);
+  const cyclesPassed = Math.floor(diff / s.cycle_length);
+  const currentStart = addDays(start, cyclesPassed * s.cycle_length);
+  const nextPeriodDate = addDays(currentStart, s.cycle_length);
+  const ovulationDate = addDays(nextPeriodDate, -14);
+  return differenceInCalendarDays(t, ovulationDate) === 0;
 }
 
 
