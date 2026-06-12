@@ -7,6 +7,7 @@ import { computeCycle, fmtDate, type CycleSettings, type Phase } from "@/lib/cyc
 import { logAudit } from "@/lib/audit";
 import { Button } from "@/components/ui/button";
 import { Droplet, Sparkles, Flower2, Moon as MoonIcon } from "lucide-react";
+import { CycleCalendar } from "@/components/cycle-calendar";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Dashboard,
@@ -86,6 +87,8 @@ function Dashboard() {
           </div>
         </div>
       </section>
+      <CycleCalendar settings={settings} />
+
 
       <section className="surface-card p-6 flex items-center justify-between gap-4">
         <div>
