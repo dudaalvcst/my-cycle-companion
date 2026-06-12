@@ -77,6 +77,17 @@ export function phaseForDate(s: CycleSettings, date: Date): Phase {
   return "luteal";
 }
 
+export function isOvulationDay(s: CycleSettings, date: Date): boolean {
+  const start = new Date(s.last_period_start + "T00:00:00");
+  const t = new Date(date.toISOString().slice(0, 10) + "T00:00:00");
+  const diff = differenceInCalendarDays(t, start);
+  const cyclesPassed = Math.floor(diff / s.cycle_length);
+  const currentStart = addDays(start, cyclesPassed * s.cycle_length);
+  const nextPeriodDate = addDays(currentStart, s.cycle_length);
+  const ovulationDate = addDays(nextPeriodDate, -14);
+  return differenceInCalendarDays(t, ovulationDate) === 0;
+}
+
 
 export const FLOWS = ["none", "spotting", "light", "moderate", "heavy"] as const;
 export const SYMPTOMS = ["cramps", "headache", "breast", "acne", "bloating", "fatigue"] as const;
