@@ -25,7 +25,7 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
-const PWD = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+const PWD = /^.{6,}$/;
 
 function AuthPage() {
   const { t } = useI18n();
