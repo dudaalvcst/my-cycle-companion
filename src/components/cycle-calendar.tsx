@@ -13,7 +13,7 @@ import {
 } from "date-fns";
 import { ptBR, enUS } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { phaseForDate, type CycleSettings, type Phase } from "@/lib/cycle";
+import { phaseForDate, isOvulationDay, type CycleSettings, type Phase } from "@/lib/cycle";
 import { useI18n } from "@/lib/i18n";
 
 const PHASE_TOKENS: Record<Phase, string> = {
