@@ -48,6 +48,7 @@ const PT: Dict = {
   "calendar.today": "Hoje",
   "calendar.prev": "Mês anterior",
   "calendar.next": "Próximo mês",
+  "calendar.ovulation": "Dia da ovulação",
   "phase.menstrual": "Fase Menstrual",
   "phase.follicular": "Fase Folicular",
   "phase.ovulatory": "Fase Ovulatória",
