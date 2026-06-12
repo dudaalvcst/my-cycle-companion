@@ -14,7 +14,126 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      audit_logs: {
+        Row: {
+          created_at: string
+          event: string
+          fields_changed: string[] | null
+          id: string
+          ip_hash: string | null
+          scope: string | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event: string
+          fields_changed?: string[] | null
+          id?: string
+          ip_hash?: string | null
+          scope?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event?: string
+          fields_changed?: string[] | null
+          id?: string
+          ip_hash?: string | null
+          scope?: string | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      cycle_settings: {
+        Row: {
+          created_at: string
+          cycle_length: number
+          last_period_start: string
+          period_length: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          cycle_length?: number
+          last_period_start: string
+          period_length?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          cycle_length?: number
+          last_period_start?: string
+          period_length?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      daily_entries: {
+        Row: {
+          created_at: string
+          entry_date: string
+          flow: string | null
+          id: string
+          moods: string[]
+          notes: string | null
+          symptoms: string[]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entry_date: string
+          flow?: string | null
+          id?: string
+          moods?: string[]
+          notes?: string | null
+          symptoms?: string[]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entry_date?: string
+          flow?: string | null
+          id?: string
+          moods?: string[]
+          notes?: string | null
+          symptoms?: string[]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          id: string
+          locale: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          id: string
+          locale?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          locale?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
