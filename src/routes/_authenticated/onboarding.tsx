@@ -44,7 +44,7 @@ function Onboarding() {
       fields_changed: ["last_period_start", "cycle_length", "period_length"],
       scope: "ONBOARDING",
     });
-    nav({ to: "/dashboard" });
+    window.location.assign("/dashboard");
   };
 
   return (
