@@ -73,10 +73,10 @@
   --input: oklch(0.92 0.02 295);
   --ring: oklch(0.65 0.15 290);
 
-  --phase-menstrual: oklch(0.65 0.16 15);
-  --phase-follicular: oklch(0.7 0.12 145);
-  --phase-ovulatory: oklch(0.72 0.15 75);
-  --phase-luteal: oklch(0.65 0.14 290);
+  --phase-menstrual: oklch(0.5 0.18 320);
+  --phase-follicular: oklch(0.82 0.08 295);
+  --phase-ovulatory: oklch(0.65 0.22 305);
+  --phase-luteal: oklch(0.42 0.12 280);
 
   --gradient-aurora: linear-gradient(135deg, oklch(0.92 0.07 295) 0%, oklch(0.88 0.05 320) 50%, oklch(0.94 0.04 270) 100%);
   --gradient-primary: linear-gradient(135deg, oklch(0.6 0.17 290) 0%, oklch(0.55 0.16 310) 100%);
