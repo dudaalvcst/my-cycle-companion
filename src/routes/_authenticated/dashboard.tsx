@@ -87,6 +87,8 @@ function Dashboard() {
           </div>
         </div>
       </section>
+      <CycleCalendar settings={settings} />
+
 
       <section className="surface-card p-6 flex items-center justify-between gap-4">
         <div>
