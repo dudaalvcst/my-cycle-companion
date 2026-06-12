@@ -146,6 +146,7 @@ const EN: Dict = {
   "calendar.today": "Today",
   "calendar.prev": "Previous month",
   "calendar.next": "Next month",
+  "calendar.ovulation": "Ovulation day",
   "phase.menstrual": "Menstrual Phase",
   "phase.follicular": "Follicular Phase",
   "phase.ovulatory": "Ovulatory Phase",
