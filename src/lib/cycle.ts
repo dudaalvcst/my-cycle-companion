@@ -53,7 +53,6 @@ export function computeCycle(s: CycleSettings, today = new Date()): CycleInfo {
   };
 }
 
-import { ptBR, enUS } from "date-fns/locale";
 export function fmtDate(d: Date, locale: "pt" | "en") {
   return format(d, locale === "pt" ? "dd 'de' MMMM" : "MMM dd", {
     locale: locale === "pt" ? ptBR : enUS,
