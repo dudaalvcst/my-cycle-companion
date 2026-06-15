@@ -139,7 +139,7 @@ export function CycleCalendar({ settings }: { settings: CycleSettings }) {
           <div key={p} className="inline-flex items-center gap-1.5">
             <span
               className="inline-block h-3 w-3 rounded-full"
-              style={{ background: PHASE_TOKENS[p] }}
+              style={{ background: `color-mix(in oklch, ${PHASE_TOKENS[p]} 25%, transparent)` }}
               aria-hidden
             />
             <span className="text-muted-foreground">{t(PHASE_KEYS[p])}</span>
@@ -148,7 +148,10 @@ export function CycleCalendar({ settings }: { settings: CycleSettings }) {
         <div className="inline-flex items-center gap-1.5">
           <span
             className="inline-block h-3 w-3 rounded-full"
-            style={{ background: PHASE_TOKENS.ovulatory, boxShadow: `inset 0 0 0 1.5px ${PHASE_TOKENS.ovulatory}` }}
+            style={{
+              background: `color-mix(in oklch, ${PHASE_TOKENS.ovulatory} 40%, transparent)`,
+              boxShadow: `inset 0 0 0 1.5px ${PHASE_TOKENS.ovulatory}`,
+            }}
             aria-hidden
           />
           <span className="text-muted-foreground">{t("calendar.ovulation")}</span>
