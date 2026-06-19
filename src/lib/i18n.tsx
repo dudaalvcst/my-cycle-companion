@@ -56,6 +56,8 @@ const PT: Dict = {
   "calendar.set.end": "Último dia do sangramento",
   "calendar.end.invalid": "Selecione uma data dentro da menstruação atual.",
   "calendar.saved": "Ciclo atualizado",
+  "calendar.remove": "Remover este registro",
+  "calendar.removed": "Registro removido",
   "phase.menstrual": "Fase Menstrual",
   "phase.follicular": "Fase Folicular",
   "phase.ovulatory": "Fase Ovulatória",
