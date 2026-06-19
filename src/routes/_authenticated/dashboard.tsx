@@ -87,7 +87,25 @@ function Dashboard() {
           </div>
         </div>
       </section>
-      <CycleCalendar settings={settings} />
+      <CycleCalendar
+        settings={settings}
+        onUpdate={async (patch) => {
+          if (!user) return;
+          const next = { ...settings, ...patch } as CycleSettings;
+          const { error } = await supabase
+            .from("cycle_settings")
+            .update(patch)
+            .eq("user_id", user.id);
+          if (error) return;
+          setSettings(next);
+          logAudit({
+            event: "HEALTH_DATA_MODIFIED",
+            user_id: user.id,
+            scope: "CYCLE_SETTINGS",
+            fields_changed: Object.keys(patch),
+          });
+        }}
+      />
 
 
       <section className="surface-card p-6 flex items-center justify-between gap-4">
