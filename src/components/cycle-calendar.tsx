@@ -17,7 +17,14 @@ import {
 } from "date-fns";
 import { ptBR, enUS } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { phaseForDate, isOvulationDay, type CycleSettings, type Phase } from "@/lib/cycle";
+import {
+  phaseForDate,
+  isOvulationDay,
+  isPredictedDate,
+  type CycleSettings,
+  type Phase,
+  type PeriodLog,
+} from "@/lib/cycle";
 import { useI18n } from "@/lib/i18n";
 import {
   Dialog,
@@ -45,10 +52,19 @@ const PHASE_KEYS: Record<Phase, string> = {
 
 export interface CycleCalendarProps {
   settings: CycleSettings;
-  onUpdate?: (next: Partial<CycleSettings>) => Promise<void> | void;
+  logs: PeriodLog[];
+  onLogStart?: (date: string) => Promise<void> | void;
+  onLogEnd?: (startDate: string, endDate: string) => Promise<void> | void;
+  onRemoveLog?: (startDate: string) => Promise<void> | void;
 }
 
-export function CycleCalendar({ settings, onUpdate }: CycleCalendarProps) {
+export function CycleCalendar({
+  settings,
+  logs,
+  onLogStart,
+  onLogEnd,
+  onRemoveLog,
+}: CycleCalendarProps) {
   const { t, locale } = useI18n();
   const dfLocale = locale === "pt" ? ptBR : enUS;
   const today = startOfDay(new Date());
@@ -71,16 +87,23 @@ export function CycleCalendar({ settings, onUpdate }: CycleCalendarProps) {
     );
   }, [dfLocale]);
 
-  const lastStart = useMemo(
-    () => startOfDay(new Date(settings.last_period_start + "T00:00:00")),
-    [settings.last_period_start],
-  );
+  const startsSet = useMemo(() => new Set(logs.map((l) => l.start_date)), [logs]);
+
+  // Find the most recent logged start <= selected (the cycle that contains selected)
+  const owningStart = useMemo(() => {
+    if (!selected) return null;
+    const iso = format(selected, "yyyy-MM-dd");
+    const sorted = [...logs].sort((a, b) => a.start_date.localeCompare(b.start_date));
+    let owner: string | null = null;
+    for (const l of sorted) if (l.start_date <= iso) owner = l.start_date;
+    return owner;
+  }, [selected, logs]);
 
   async function handleSetStart() {
-    if (!selected || !onUpdate) return;
+    if (!selected || !onLogStart) return;
     setSaving(true);
     try {
-      await onUpdate({ last_period_start: format(selected, "yyyy-MM-dd") });
+      await onLogStart(format(selected, "yyyy-MM-dd"));
       toast.success(t("calendar.saved"));
       setSelected(null);
     } finally {
@@ -89,19 +112,16 @@ export function CycleCalendar({ settings, onUpdate }: CycleCalendarProps) {
   }
 
   async function handleSetEnd() {
-    if (!selected || !onUpdate) return;
-    // Compute period_length relative to current cycle's start
-    const diff = differenceInCalendarDays(selected, lastStart);
-    const cyclesPassed = Math.floor(diff / settings.cycle_length);
-    const currentStart = addDays(lastStart, cyclesPassed * settings.cycle_length);
-    const len = differenceInCalendarDays(selected, currentStart) + 1;
+    if (!selected || !owningStart || !onLogEnd) return;
+    const startD = startOfDay(new Date(owningStart + "T00:00:00"));
+    const len = differenceInCalendarDays(selected, startD) + 1;
     if (len < 1 || len > 14) {
       toast.error(t("calendar.end.invalid"));
       return;
     }
     setSaving(true);
     try {
-      await onUpdate({ period_length: len });
+      await onLogEnd(owningStart, format(selected, "yyyy-MM-dd"));
       toast.success(t("calendar.saved"));
       setSelected(null);
     } finally {
@@ -109,15 +129,28 @@ export function CycleCalendar({ settings, onUpdate }: CycleCalendarProps) {
     }
   }
 
+  async function handleRemove() {
+    if (!selected || !onRemoveLog) return;
+    const iso = format(selected, "yyyy-MM-dd");
+    if (!startsSet.has(iso)) return;
+    setSaving(true);
+    try {
+      await onRemoveLog(iso);
+      toast.success(t("calendar.removed"));
+      setSelected(null);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const selectedIso = selected ? format(selected, "yyyy-MM-dd") : null;
+  const selectedIsLoggedStart = !!selectedIso && startsSet.has(selectedIso);
   const canEndForSelected = useMemo(() => {
-    if (!selected) return false;
-    const diff = differenceInCalendarDays(selected, lastStart);
-    if (diff < 0) return false;
-    const cyclesPassed = Math.floor(diff / settings.cycle_length);
-    const currentStart = addDays(lastStart, cyclesPassed * settings.cycle_length);
-    const len = differenceInCalendarDays(selected, currentStart) + 1;
+    if (!selected || !owningStart) return false;
+    const startD = startOfDay(new Date(owningStart + "T00:00:00"));
+    const len = differenceInCalendarDays(selected, startD) + 1;
     return len >= 1 && len <= 14;
-  }, [selected, lastStart, settings.cycle_length]);
+  }, [selected, owningStart]);
 
   return (
     <section className="surface-card p-5 sm:p-6">
@@ -160,18 +193,20 @@ export function CycleCalendar({ settings, onUpdate }: CycleCalendarProps) {
 
       <div className="mt-1 grid grid-cols-7 gap-1">
         {days.map((day) => {
-          const phase = phaseForDate(settings, day);
+          const phase = phaseForDate(logs, settings, day);
           const inMonth = isSameMonth(day, cursor);
           const isToday = isSameDay(day, today);
-          const isOvu = isOvulationDay(settings, day);
+          const isOvu = isOvulationDay(logs, settings, day);
+          const predicted = isPredictedDate(logs, settings, day);
           const isFuture = isAfter(startOfDay(day), today);
+          const showAsPrediction = predicted && isFuture;
           const color = PHASE_TOKENS[phase];
           const ovuColor = PHASE_TOKENS.ovulatory;
-          const label = `${format(day, "PP", { locale: dfLocale })} — ${t(PHASE_KEYS[phase])}${isOvu ? ` · ${t("calendar.ovulation")}` : ""}${isFuture ? ` · ${t("calendar.prediction")}` : ""}`;
+          const label = `${format(day, "PP", { locale: dfLocale })} — ${t(PHASE_KEYS[phase])}${isOvu ? ` · ${t("calendar.ovulation")}` : ""}${showAsPrediction ? ` · ${t("calendar.prediction")}` : ""}`;
           const baseBg = isOvu
             ? `radial-gradient(circle at center, ${ovuColor} 0%, ${ovuColor} 55%, color-mix(in oklch, ${color} 30%, transparent) 100%)`
             : inMonth
-            ? `color-mix(in oklch, ${color} ${isFuture ? 12 : 22}%, transparent)`
+            ? `color-mix(in oklch, ${color} ${showAsPrediction ? 12 : 22}%, transparent)`
             : `color-mix(in oklch, ${color} 8%, transparent)`;
           return (
             <button
@@ -196,8 +231,8 @@ export function CycleCalendar({ settings, onUpdate }: CycleCalendarProps) {
                     : isOvu
                     ? `0 4px 14px color-mix(in oklch, ${ovuColor} 45%, transparent)`
                     : undefined,
-                  outline: isFuture && !isOvu ? `1px dashed color-mix(in oklch, ${color} 70%, transparent)` : undefined,
-                  outlineOffset: isFuture && !isOvu ? "-3px" : undefined,
+                  outline: showAsPrediction && !isOvu ? `1px dashed color-mix(in oklch, ${color} 70%, transparent)` : undefined,
+                  outlineOffset: showAsPrediction && !isOvu ? "-3px" : undefined,
                   fontWeight: isToday || isOvu ? 600 : 400,
                   opacity: inMonth ? 1 : 0.55,
                 }}
@@ -267,6 +302,16 @@ export function CycleCalendar({ settings, onUpdate }: CycleCalendarProps) {
             >
               {t("calendar.set.end")}
             </Button>
+            {selectedIsLoggedStart && (
+              <Button
+                variant="ghost"
+                className="rounded-full text-destructive hover:text-destructive"
+                disabled={saving}
+                onClick={handleRemove}
+              >
+                {t("calendar.remove")}
+              </Button>
+            )}
           </div>
         </DialogContent>
       </Dialog>
