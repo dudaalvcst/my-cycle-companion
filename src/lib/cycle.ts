@@ -138,7 +138,9 @@ export function windowForDate(
     return { start: currentStart, cycleLength, periodLength, isPrediction: false };
   }
 
-  // Latest logged cycle → extends with learned length; future cycles roll forward
+  // Latest logged cycle → only the days up to today count as actual.
+  // Anything beyond today (even inside the same cycle window) is a prediction.
+  const today = startOfDay(new Date());
   const diff = differenceInCalendarDays(target, currentStart);
   const cycles = Math.floor(diff / learned.cycle_length);
   const start = addDays(currentStart, cycles * learned.cycle_length);
@@ -152,9 +154,10 @@ export function windowForDate(
     start,
     cycleLength: learned.cycle_length,
     periodLength,
-    isPrediction: !isLatestActual,
+    isPrediction: !isLatestActual || target > today,
   };
 }
+
 
 export function phaseForDate(logs: PeriodLog[], settings: CycleSettings, date: Date): Phase {
   const w = windowForDate(logs, settings, date);
