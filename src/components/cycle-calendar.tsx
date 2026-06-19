@@ -1,12 +1,16 @@
 import { useMemo, useState } from "react";
 import {
+  addDays,
   addMonths,
+  differenceInCalendarDays,
   eachDayOfInterval,
   endOfMonth,
   endOfWeek,
   format,
+  isAfter,
   isSameDay,
   isSameMonth,
+  startOfDay,
   startOfMonth,
   startOfWeek,
   subMonths,
@@ -15,6 +19,15 @@ import { ptBR, enUS } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { phaseForDate, isOvulationDay, type CycleSettings, type Phase } from "@/lib/cycle";
 import { useI18n } from "@/lib/i18n";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const PHASE_TOKENS: Record<Phase, string> = {
   menstrual: "var(--color-phase-menstrual)",
@@ -30,11 +43,18 @@ const PHASE_KEYS: Record<Phase, string> = {
   luteal: "phase.luteal",
 };
 
-export function CycleCalendar({ settings }: { settings: CycleSettings }) {
+export interface CycleCalendarProps {
+  settings: CycleSettings;
+  onUpdate?: (next: Partial<CycleSettings>) => Promise<void> | void;
+}
+
+export function CycleCalendar({ settings, onUpdate }: CycleCalendarProps) {
   const { t, locale } = useI18n();
   const dfLocale = locale === "pt" ? ptBR : enUS;
-  const today = new Date();
+  const today = startOfDay(new Date());
   const [cursor, setCursor] = useState(() => startOfMonth(today));
+  const [selected, setSelected] = useState<Date | null>(null);
+  const [saving, setSaving] = useState(false);
 
   const days = useMemo(() => {
     const monthStart = startOfMonth(cursor);
@@ -50,6 +70,54 @@ export function CycleCalendar({ settings }: { settings: CycleSettings }) {
       format(new Date(start.getFullYear(), start.getMonth(), start.getDate() + i), "EEEEEE", { locale: dfLocale }),
     );
   }, [dfLocale]);
+
+  const lastStart = useMemo(
+    () => startOfDay(new Date(settings.last_period_start + "T00:00:00")),
+    [settings.last_period_start],
+  );
+
+  async function handleSetStart() {
+    if (!selected || !onUpdate) return;
+    setSaving(true);
+    try {
+      await onUpdate({ last_period_start: format(selected, "yyyy-MM-dd") });
+      toast.success(t("calendar.saved"));
+      setSelected(null);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleSetEnd() {
+    if (!selected || !onUpdate) return;
+    // Compute period_length relative to current cycle's start
+    const diff = differenceInCalendarDays(selected, lastStart);
+    const cyclesPassed = Math.floor(diff / settings.cycle_length);
+    const currentStart = addDays(lastStart, cyclesPassed * settings.cycle_length);
+    const len = differenceInCalendarDays(selected, currentStart) + 1;
+    if (len < 1 || len > 14) {
+      toast.error(t("calendar.end.invalid"));
+      return;
+    }
+    setSaving(true);
+    try {
+      await onUpdate({ period_length: len });
+      toast.success(t("calendar.saved"));
+      setSelected(null);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const canEndForSelected = useMemo(() => {
+    if (!selected) return false;
+    const diff = differenceInCalendarDays(selected, lastStart);
+    if (diff < 0) return false;
+    const cyclesPassed = Math.floor(diff / settings.cycle_length);
+    const currentStart = addDays(lastStart, cyclesPassed * settings.cycle_length);
+    const len = differenceInCalendarDays(selected, currentStart) + 1;
+    return len >= 1 && len <= 14;
+  }, [selected, lastStart, settings.cycle_length]);
 
   return (
     <section className="surface-card p-5 sm:p-6">
@@ -96,23 +164,28 @@ export function CycleCalendar({ settings }: { settings: CycleSettings }) {
           const inMonth = isSameMonth(day, cursor);
           const isToday = isSameDay(day, today);
           const isOvu = isOvulationDay(settings, day);
+          const isFuture = isAfter(startOfDay(day), today);
           const color = PHASE_TOKENS[phase];
           const ovuColor = PHASE_TOKENS.ovulatory;
-          const label = `${format(day, "PP", { locale: dfLocale })} — ${t(PHASE_KEYS[phase])}${isOvu ? ` · ${t("calendar.ovulation")}` : ""}`;
+          const label = `${format(day, "PP", { locale: dfLocale })} — ${t(PHASE_KEYS[phase])}${isOvu ? ` · ${t("calendar.ovulation")}` : ""}${isFuture ? ` · ${t("calendar.prediction")}` : ""}`;
+          const baseBg = isOvu
+            ? `radial-gradient(circle at center, ${ovuColor} 0%, ${ovuColor} 55%, color-mix(in oklch, ${color} 30%, transparent) 100%)`
+            : inMonth
+            ? `color-mix(in oklch, ${color} ${isFuture ? 12 : 22}%, transparent)`
+            : `color-mix(in oklch, ${color} 8%, transparent)`;
           return (
-            <div
+            <button
               key={day.toISOString()}
-              className="aspect-square flex items-center justify-center"
+              type="button"
+              onClick={() => setSelected(day)}
+              className="aspect-square flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-xl"
               title={label}
+              aria-label={label}
             >
               <div
-                className="relative flex h-full w-full items-center justify-center rounded-xl text-sm transition"
+                className="relative flex h-full w-full items-center justify-center rounded-xl text-sm transition hover:scale-[1.04]"
                 style={{
-                  background: isOvu
-                    ? `radial-gradient(circle at center, ${ovuColor} 0%, ${ovuColor} 55%, color-mix(in oklch, ${color} 30%, transparent) 100%)`
-                    : inMonth
-                    ? `color-mix(in oklch, ${color} 22%, transparent)`
-                    : `color-mix(in oklch, ${color} 8%, transparent)`,
+                  background: baseBg,
                   color: isOvu
                     ? "var(--primary-foreground)"
                     : inMonth
@@ -123,13 +196,15 @@ export function CycleCalendar({ settings }: { settings: CycleSettings }) {
                     : isOvu
                     ? `0 4px 14px color-mix(in oklch, ${ovuColor} 45%, transparent)`
                     : undefined,
+                  outline: isFuture && !isOvu ? `1px dashed color-mix(in oklch, ${color} 70%, transparent)` : undefined,
+                  outlineOffset: isFuture && !isOvu ? "-3px" : undefined,
                   fontWeight: isToday || isOvu ? 600 : 400,
                   opacity: inMonth ? 1 : 0.55,
                 }}
               >
                 {format(day, "d")}
               </div>
-            </div>
+            </button>
           );
         })}
       </div>
@@ -156,9 +231,45 @@ export function CycleCalendar({ settings }: { settings: CycleSettings }) {
           />
           <span className="text-muted-foreground">{t("calendar.ovulation")}</span>
         </div>
+        <div className="inline-flex items-center gap-1.5">
+          <span
+            className="inline-block h-3 w-3 rounded-full bg-transparent"
+            style={{ outline: `1px dashed color-mix(in oklch, ${PHASE_TOKENS.menstrual} 70%, transparent)`, outlineOffset: "-1px" }}
+            aria-hidden
+          />
+          <span className="text-muted-foreground">{t("calendar.prediction")}</span>
+        </div>
       </div>
 
       <p className="mt-4 text-xs text-muted-foreground">{t("disclaimer")}</p>
+
+      <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle>{t("calendar.edit.title")}</DialogTitle>
+            <DialogDescription>
+              {t("calendar.edit.desc", { date: selected ? format(selected, "PP", { locale: dfLocale }) : "" })}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="flex flex-col gap-2 pt-2">
+            <Button
+              className="rounded-full gradient-primary"
+              disabled={saving}
+              onClick={handleSetStart}
+            >
+              {t("calendar.set.start")}
+            </Button>
+            <Button
+              variant="outline"
+              className="rounded-full"
+              disabled={saving || !canEndForSelected}
+              onClick={handleSetEnd}
+            >
+              {t("calendar.set.end")}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
