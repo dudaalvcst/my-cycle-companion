@@ -163,6 +163,8 @@ const EN: Dict = {
   "calendar.set.end": "Last day of bleeding",
   "calendar.end.invalid": "Pick a date within the current period.",
   "calendar.saved": "Cycle updated",
+  "calendar.remove": "Remove this log",
+  "calendar.removed": "Log removed",
   "phase.menstrual": "Menstrual Phase",
   "phase.follicular": "Follicular Phase",
   "phase.ovulatory": "Ovulatory Phase",
