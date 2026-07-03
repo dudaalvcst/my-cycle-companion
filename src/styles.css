@@ -106,6 +106,111 @@
   --ring: oklch(0.7 0.14 295);
 }
 
+/* Alternative palettes — apply via data-theme on <html> */
+[data-theme="rose"] {
+  --background: oklch(0.985 0.008 20);
+  --foreground: oklch(0.24 0.05 20);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0.05 20);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.24 0.05 20);
+  --primary: oklch(0.6 0.18 20);
+  --primary-foreground: oklch(0.99 0.005 20);
+  --secondary: oklch(0.94 0.04 20);
+  --secondary-foreground: oklch(0.3 0.07 20);
+  --muted: oklch(0.96 0.02 20);
+  --muted-foreground: oklch(0.5 0.05 20);
+  --accent: oklch(0.88 0.08 20);
+  --accent-foreground: oklch(0.27 0.07 20);
+  --border: oklch(0.92 0.03 20);
+  --input: oklch(0.92 0.03 20);
+  --ring: oklch(0.65 0.17 20);
+  --phase-menstrual: oklch(0.55 0.2 15);
+  --phase-follicular: oklch(0.82 0.09 30);
+  --phase-ovulatory: oklch(0.68 0.2 25);
+  --phase-luteal: oklch(0.45 0.13 10);
+  --gradient-aurora: linear-gradient(135deg, oklch(0.93 0.08 20) 0%, oklch(0.9 0.06 40) 50%, oklch(0.94 0.05 10) 100%);
+  --gradient-primary: linear-gradient(135deg, oklch(0.63 0.18 20) 0%, oklch(0.58 0.17 35) 100%);
+}
+
+[data-theme="ocean"] {
+  --background: oklch(0.985 0.008 220);
+  --foreground: oklch(0.22 0.05 230);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.05 230);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.05 230);
+  --primary: oklch(0.55 0.14 230);
+  --primary-foreground: oklch(0.99 0.005 220);
+  --secondary: oklch(0.93 0.03 220);
+  --secondary-foreground: oklch(0.28 0.06 230);
+  --muted: oklch(0.96 0.015 220);
+  --muted-foreground: oklch(0.5 0.04 230);
+  --accent: oklch(0.86 0.07 210);
+  --accent-foreground: oklch(0.25 0.06 230);
+  --border: oklch(0.92 0.02 220);
+  --input: oklch(0.92 0.02 220);
+  --ring: oklch(0.65 0.14 230);
+  --phase-menstrual: oklch(0.5 0.18 340);
+  --phase-follicular: oklch(0.8 0.09 200);
+  --phase-ovulatory: oklch(0.65 0.18 195);
+  --phase-luteal: oklch(0.42 0.12 240);
+  --gradient-aurora: linear-gradient(135deg, oklch(0.92 0.07 220) 0%, oklch(0.88 0.06 200) 50%, oklch(0.94 0.04 250) 100%);
+  --gradient-primary: linear-gradient(135deg, oklch(0.58 0.15 220) 0%, oklch(0.55 0.14 250) 100%);
+}
+
+[data-theme="forest"] {
+  --background: oklch(0.985 0.008 140);
+  --foreground: oklch(0.22 0.05 150);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.05 150);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.22 0.05 150);
+  --primary: oklch(0.5 0.13 150);
+  --primary-foreground: oklch(0.99 0.005 140);
+  --secondary: oklch(0.93 0.04 140);
+  --secondary-foreground: oklch(0.28 0.06 150);
+  --muted: oklch(0.96 0.02 140);
+  --muted-foreground: oklch(0.48 0.04 150);
+  --accent: oklch(0.86 0.08 130);
+  --accent-foreground: oklch(0.25 0.06 150);
+  --border: oklch(0.92 0.03 140);
+  --input: oklch(0.92 0.03 140);
+  --ring: oklch(0.6 0.14 150);
+  --phase-menstrual: oklch(0.5 0.18 20);
+  --phase-follicular: oklch(0.82 0.1 130);
+  --phase-ovulatory: oklch(0.65 0.18 100);
+  --phase-luteal: oklch(0.42 0.1 160);
+  --gradient-aurora: linear-gradient(135deg, oklch(0.92 0.08 140) 0%, oklch(0.88 0.07 100) 50%, oklch(0.94 0.05 170) 100%);
+  --gradient-primary: linear-gradient(135deg, oklch(0.55 0.14 150) 0%, oklch(0.5 0.13 130) 100%);
+}
+
+[data-theme="sunset"] {
+  --background: oklch(0.985 0.01 60);
+  --foreground: oklch(0.24 0.05 40);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0.05 40);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.24 0.05 40);
+  --primary: oklch(0.62 0.18 40);
+  --primary-foreground: oklch(0.99 0.005 60);
+  --secondary: oklch(0.94 0.04 60);
+  --secondary-foreground: oklch(0.3 0.07 40);
+  --muted: oklch(0.96 0.02 60);
+  --muted-foreground: oklch(0.5 0.05 40);
+  --accent: oklch(0.88 0.09 50);
+  --accent-foreground: oklch(0.27 0.07 40);
+  --border: oklch(0.92 0.03 60);
+  --input: oklch(0.92 0.03 60);
+  --ring: oklch(0.67 0.17 40);
+  --phase-menstrual: oklch(0.55 0.2 25);
+  --phase-follicular: oklch(0.82 0.09 70);
+  --phase-ovulatory: oklch(0.7 0.2 60);
+  --phase-luteal: oklch(0.45 0.13 30);
+  --gradient-aurora: linear-gradient(135deg, oklch(0.93 0.09 50) 0%, oklch(0.9 0.08 20) 50%, oklch(0.94 0.06 80) 100%);
+  --gradient-primary: linear-gradient(135deg, oklch(0.65 0.18 45) 0%, oklch(0.6 0.18 20) 100%);
+}
+
 @layer base {
   * { border-color: var(--color-border); }
   html, body { font-family: var(--font-sans); }
