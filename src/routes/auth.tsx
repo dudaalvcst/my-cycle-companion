@@ -58,7 +58,12 @@ function AuthPage() {
         });
         if (error) {
           await logAudit({ event: "AUTH_ATTEMPT", status: "FAILED" });
-          toast.error(t("auth.error.invalid"));
+          const msg = /weak|pwned|password/i.test(error.message)
+            ? t("auth.error.weak.pwned")
+            : /registered|exists/i.test(error.message)
+            ? t("auth.error.exists")
+            : error.message;
+          toast.error(msg);
         } else {
           await logAudit({ event: "AUTH_ATTEMPT", status: "SUCCESS" });
           toast.success("✓");
