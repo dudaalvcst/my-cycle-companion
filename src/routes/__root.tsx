@@ -115,6 +115,11 @@ function RootComponent() {
   const router = useRouter();
 
   useEffect(() => {
+    const stored = localStorage.getItem("theme");
+    if (stored && stored !== "lilac") document.documentElement.setAttribute("data-theme", stored);
+  }, []);
+
+  useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
       if (event !== "SIGNED_IN" && event !== "SIGNED_OUT" && event !== "USER_UPDATED") return;
       router.invalidate();
