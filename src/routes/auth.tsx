@@ -127,7 +127,7 @@ function AuthPage() {
             <div>
               <Label htmlFor="password">{t("auth.password")}</Label>
               <Input id="password" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} autoComplete={mode === "signup" ? "new-password" : "current-password"} className="mt-1 rounded-xl" />
-              {mode === "signup" && <p className="mt-1 text-xs text-muted-foreground">{t("auth.error.weak")}</p>}
+              {mode === "signup" && <p className="mt-1 text-xs text-muted-foreground">{t("auth.hint.password")}</p>}
             </div>
             <Button type="submit" disabled={submitting} className="w-full rounded-full gradient-primary">
               {mode === "signup" ? t("auth.signup") : t("auth.signin")}
