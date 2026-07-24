@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n, type Locale } from "@/lib/i18n";
-import { Moon, BookHeart, Settings, LogOut, LayoutDashboard } from "lucide-react";
+import { Moon, BookHeart, Settings, LogOut, LayoutDashboard, CalendarClock, CheckSquare, Scissors, Sparkles } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -76,8 +76,12 @@ function AuthedLayout() {
             <span className="font-display text-lg">{t("app.name")}</span>
           </Link>
           {!isOnboarding && (
-            <nav className="hidden sm:flex items-center gap-1 text-sm">
+            <nav className="hidden lg:flex items-center gap-1 text-sm">
               <NavItem to="/dashboard" icon={LayoutDashboard} label={t("nav.dashboard")} />
+              <NavItem to="/agenda" icon={CalendarClock} label={t("nav.agenda")} />
+              <NavItem to="/tasks" icon={CheckSquare} label={t("nav.tasks")} />
+              <NavItem to="/hair" icon={Scissors} label={t("nav.hair")} />
+              <NavItem to="/skincare" icon={Sparkles} label={t("nav.skincare")} />
               <NavItem to="/diary" icon={BookHeart} label={t("nav.diary")} />
               <NavItem to="/settings" icon={Settings} label={t("nav.settings")} />
             </nav>
@@ -90,8 +94,12 @@ function AuthedLayout() {
           </div>
         </div>
         {!isOnboarding && (
-          <nav className="sm:hidden flex items-center justify-around border-t border-border bg-background/70 text-xs">
+          <nav className="lg:hidden flex items-center justify-around gap-1 border-t border-border bg-background/70 text-[10px] overflow-x-auto px-2 py-1">
             <NavItem to="/dashboard" icon={LayoutDashboard} label={t("nav.dashboard")} compact />
+            <NavItem to="/agenda" icon={CalendarClock} label={t("nav.agenda")} compact />
+            <NavItem to="/tasks" icon={CheckSquare} label={t("nav.tasks")} compact />
+            <NavItem to="/hair" icon={Scissors} label={t("nav.hair")} compact />
+            <NavItem to="/skincare" icon={Sparkles} label={t("nav.skincare")} compact />
             <NavItem to="/diary" icon={BookHeart} label={t("nav.diary")} compact />
             <NavItem to="/settings" icon={Settings} label={t("nav.settings")} compact />
           </nav>
