@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      agenda_events: {
+        Row: {
+          created_at: string
+          description: string | null
+          end_at: string | null
+          id: string
+          location: string | null
+          start_at: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          end_at?: string | null
+          id?: string
+          location?: string | null
+          start_at: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          end_at?: string | null
+          id?: string
+          location?: string | null
+          start_at?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       audit_logs: {
         Row: {
           created_at: string
@@ -110,6 +146,39 @@ export type Database = {
         }
         Relationships: []
       }
+      hair_care_logs: {
+        Row: {
+          created_at: string
+          entry_date: string
+          id: string
+          notes: string | null
+          product: string | null
+          treatment_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          entry_date: string
+          id?: string
+          notes?: string | null
+          product?: string | null
+          treatment_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          entry_date?: string
+          id?: string
+          notes?: string | null
+          product?: string | null
+          treatment_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       period_logs: {
         Row: {
           created_at: string
@@ -158,6 +227,114 @@ export type Database = {
           id?: string
           locale?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      skincare_checkins: {
+        Row: {
+          am_done: boolean
+          created_at: string
+          entry_date: string
+          id: string
+          notes: string | null
+          pm_done: boolean
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          am_done?: boolean
+          created_at?: string
+          entry_date: string
+          id?: string
+          notes?: string | null
+          pm_done?: boolean
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          am_done?: boolean
+          created_at?: string
+          entry_date?: string
+          id?: string
+          notes?: string | null
+          pm_done?: boolean
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      skincare_steps: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          notes: string | null
+          product: string | null
+          step_order: number
+          time_of_day: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          notes?: string | null
+          product?: string | null
+          step_order?: number
+          time_of_day: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          product?: string | null
+          step_order?: number
+          time_of_day?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tasks: {
+        Row: {
+          completed: boolean
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          due_date: string | null
+          id: string
+          priority: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          priority?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          priority?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
