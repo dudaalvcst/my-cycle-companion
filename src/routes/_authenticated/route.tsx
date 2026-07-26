@@ -85,16 +85,3 @@ function AuthedLayout() {
     </div>
   );
 }
-
-function NavItem({ to, icon: Icon, label, compact }: { to: string; icon: any; label: string; compact?: boolean }) {
-  return (
-    <Link
-      to={to}
-      className="group inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-muted-foreground transition hover:bg-accent hover:text-accent-foreground [&.active]:bg-primary [&.active]:text-primary-foreground"
-      activeProps={{ className: "active" }}
-    >
-      <Icon className={compact ? "h-4 w-4" : "h-3.5 w-3.5"} />
-      <span>{label}</span>
-    </Link>
-  );
-}
