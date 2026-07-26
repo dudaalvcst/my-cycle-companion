@@ -75,35 +75,21 @@ function AuthedLayout() {
             </span>
             <span className="font-display text-lg">{t("app.name")}</span>
           </Link>
-          {!isOnboarding && (
-            <nav className="hidden lg:flex items-center gap-1 text-sm">
-              <NavItem to="/dashboard" icon={Home} label={t("nav.home")} />
-              <NavItem to="/cycle" icon={CalendarHeart} label={t("nav.cycle")} />
-              <NavItem to="/agenda" icon={CalendarClock} label={t("nav.agenda")} />
-              <NavItem to="/tasks" icon={CheckSquare} label={t("nav.tasks")} />
-              <NavItem to="/hair" icon={Scissors} label={t("nav.hair")} />
-              <NavItem to="/skincare" icon={Sparkles} label={t("nav.skincare")} />
-              <NavItem to="/settings" icon={Settings} label={t("nav.settings")} />
-            </nav>
-          )}
           <div className="flex items-center gap-2">
-            <LangSwitch />
+            {!isOnboarding && (
+              <Link
+                to="/settings"
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground transition [&.active]:bg-primary [&.active]:text-primary-foreground"
+                activeProps={{ className: "active" }}
+              >
+                <Settings className="h-3.5 w-3.5" /> {t("nav.settings")}
+              </Link>
+            )}
             <button onClick={signOut} className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground transition">
               <LogOut className="h-3.5 w-3.5" /> {t("nav.signout")}
             </button>
           </div>
         </div>
-        {!isOnboarding && (
-          <nav className="lg:hidden flex items-center justify-around gap-1 border-t border-border bg-background/70 text-[10px] overflow-x-auto px-2 py-1">
-            <NavItem to="/dashboard" icon={Home} label={t("nav.home")} compact />
-            <NavItem to="/cycle" icon={CalendarHeart} label={t("nav.cycle")} compact />
-            <NavItem to="/agenda" icon={CalendarClock} label={t("nav.agenda")} compact />
-            <NavItem to="/tasks" icon={CheckSquare} label={t("nav.tasks")} compact />
-            <NavItem to="/hair" icon={Scissors} label={t("nav.hair")} compact />
-            <NavItem to="/skincare" icon={Sparkles} label={t("nav.skincare")} compact />
-            <NavItem to="/settings" icon={Settings} label={t("nav.settings")} compact />
-          </nav>
-        )}
       </header>
       <main className="mx-auto max-w-5xl px-5 py-8">
         <Outlet />
