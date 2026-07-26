@@ -2,26 +2,14 @@ import { createFileRoute, Outlet, useNavigate, Link, useRouterState } from "@tan
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
-import { useI18n, type Locale } from "@/lib/i18n";
-import { Moon, CalendarHeart, Settings, LogOut, Home, CalendarClock, CheckSquare, Scissors, Sparkles } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
+import { Moon, Settings, LogOut } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthedLayout,
 });
 
-function LangSwitch() {
-  const { locale, setLocale } = useI18n();
-  return (
-    <div className="inline-flex rounded-full border border-border bg-card/60 p-0.5 text-xs">
-      {(["pt", "en"] as Locale[]).map((l) => (
-        <button key={l} onClick={() => setLocale(l)} className={`px-2.5 py-0.5 rounded-full transition ${locale === l ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>
-          {l.toUpperCase()}
-        </button>
-      ))}
-    </div>
-  );
-}
 
 function AuthedLayout() {
   const { user, loading } = useAuth();
@@ -75,52 +63,25 @@ function AuthedLayout() {
             </span>
             <span className="font-display text-lg">{t("app.name")}</span>
           </Link>
-          {!isOnboarding && (
-            <nav className="hidden lg:flex items-center gap-1 text-sm">
-              <NavItem to="/dashboard" icon={Home} label={t("nav.home")} />
-              <NavItem to="/cycle" icon={CalendarHeart} label={t("nav.cycle")} />
-              <NavItem to="/agenda" icon={CalendarClock} label={t("nav.agenda")} />
-              <NavItem to="/tasks" icon={CheckSquare} label={t("nav.tasks")} />
-              <NavItem to="/hair" icon={Scissors} label={t("nav.hair")} />
-              <NavItem to="/skincare" icon={Sparkles} label={t("nav.skincare")} />
-              <NavItem to="/settings" icon={Settings} label={t("nav.settings")} />
-            </nav>
-          )}
           <div className="flex items-center gap-2">
-            <LangSwitch />
+            {!isOnboarding && (
+              <Link
+                to="/settings"
+                className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground transition [&.active]:bg-primary [&.active]:text-primary-foreground"
+                activeProps={{ className: "active" }}
+              >
+                <Settings className="h-3.5 w-3.5" /> {t("nav.settings")}
+              </Link>
+            )}
             <button onClick={signOut} className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-accent-foreground transition">
               <LogOut className="h-3.5 w-3.5" /> {t("nav.signout")}
             </button>
           </div>
         </div>
-        {!isOnboarding && (
-          <nav className="lg:hidden flex items-center justify-around gap-1 border-t border-border bg-background/70 text-[10px] overflow-x-auto px-2 py-1">
-            <NavItem to="/dashboard" icon={Home} label={t("nav.home")} compact />
-            <NavItem to="/cycle" icon={CalendarHeart} label={t("nav.cycle")} compact />
-            <NavItem to="/agenda" icon={CalendarClock} label={t("nav.agenda")} compact />
-            <NavItem to="/tasks" icon={CheckSquare} label={t("nav.tasks")} compact />
-            <NavItem to="/hair" icon={Scissors} label={t("nav.hair")} compact />
-            <NavItem to="/skincare" icon={Sparkles} label={t("nav.skincare")} compact />
-            <NavItem to="/settings" icon={Settings} label={t("nav.settings")} compact />
-          </nav>
-        )}
       </header>
       <main className="mx-auto max-w-5xl px-5 py-8">
         <Outlet />
       </main>
     </div>
-  );
-}
-
-function NavItem({ to, icon: Icon, label, compact }: { to: string; icon: any; label: string; compact?: boolean }) {
-  return (
-    <Link
-      to={to}
-      className="group inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-muted-foreground transition hover:bg-accent hover:text-accent-foreground [&.active]:bg-primary [&.active]:text-primary-foreground"
-      activeProps={{ className: "active" }}
-    >
-      <Icon className={compact ? "h-4 w-4" : "h-3.5 w-3.5"} />
-      <span>{label}</span>
-    </Link>
   );
 }
