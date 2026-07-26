@@ -17,8 +17,8 @@ import { Route as AuthenticatedSkincareRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedHairRouteImport } from './routes/_authenticated/hair'
-import { Route as AuthenticatedDiaryRouteImport } from './routes/_authenticated/diary'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedCycleRouteImport } from './routes/_authenticated/cycle'
 import { Route as AuthenticatedAgendaRouteImport } from './routes/_authenticated/agenda'
 
 const AuthRoute = AuthRouteImport.update({
@@ -60,14 +60,14 @@ const AuthenticatedHairRoute = AuthenticatedHairRouteImport.update({
   path: '/hair',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const AuthenticatedDiaryRoute = AuthenticatedDiaryRouteImport.update({
-  id: '/diary',
-  path: '/diary',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCycleRoute = AuthenticatedCycleRouteImport.update({
+  id: '/cycle',
+  path: '/cycle',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAgendaRoute = AuthenticatedAgendaRouteImport.update({
@@ -80,8 +80,8 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/agenda': typeof AuthenticatedAgendaRoute
+  '/cycle': typeof AuthenticatedCycleRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/diary': typeof AuthenticatedDiaryRoute
   '/hair': typeof AuthenticatedHairRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/settings': typeof AuthenticatedSettingsRoute
@@ -92,8 +92,8 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/agenda': typeof AuthenticatedAgendaRoute
+  '/cycle': typeof AuthenticatedCycleRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
-  '/diary': typeof AuthenticatedDiaryRoute
   '/hair': typeof AuthenticatedHairRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/settings': typeof AuthenticatedSettingsRoute
@@ -106,8 +106,8 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/_authenticated/agenda': typeof AuthenticatedAgendaRoute
+  '/_authenticated/cycle': typeof AuthenticatedCycleRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
-  '/_authenticated/diary': typeof AuthenticatedDiaryRoute
   '/_authenticated/hair': typeof AuthenticatedHairRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
@@ -120,8 +120,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/agenda'
+    | '/cycle'
     | '/dashboard'
-    | '/diary'
     | '/hair'
     | '/onboarding'
     | '/settings'
@@ -132,8 +132,8 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/agenda'
+    | '/cycle'
     | '/dashboard'
-    | '/diary'
     | '/hair'
     | '/onboarding'
     | '/settings'
@@ -145,8 +145,8 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/_authenticated/agenda'
+    | '/_authenticated/cycle'
     | '/_authenticated/dashboard'
-    | '/_authenticated/diary'
     | '/_authenticated/hair'
     | '/_authenticated/onboarding'
     | '/_authenticated/settings'
@@ -218,18 +218,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedHairRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/_authenticated/diary': {
-      id: '/_authenticated/diary'
-      path: '/diary'
-      fullPath: '/diary'
-      preLoaderRoute: typeof AuthenticatedDiaryRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/cycle': {
+      id: '/_authenticated/cycle'
+      path: '/cycle'
+      fullPath: '/cycle'
+      preLoaderRoute: typeof AuthenticatedCycleRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/agenda': {
@@ -244,8 +244,8 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAgendaRoute: typeof AuthenticatedAgendaRoute
+  AuthenticatedCycleRoute: typeof AuthenticatedCycleRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
-  AuthenticatedDiaryRoute: typeof AuthenticatedDiaryRoute
   AuthenticatedHairRoute: typeof AuthenticatedHairRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
@@ -255,8 +255,8 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAgendaRoute: AuthenticatedAgendaRoute,
+  AuthenticatedCycleRoute: AuthenticatedCycleRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-  AuthenticatedDiaryRoute: AuthenticatedDiaryRoute,
   AuthenticatedHairRoute: AuthenticatedHairRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
