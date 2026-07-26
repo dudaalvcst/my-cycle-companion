@@ -2,26 +2,14 @@ import { createFileRoute, Outlet, useNavigate, Link, useRouterState } from "@tan
 import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
-import { useI18n, type Locale } from "@/lib/i18n";
-import { Moon, CalendarHeart, Settings, LogOut, Home, CalendarClock, CheckSquare, Scissors, Sparkles } from "lucide-react";
+import { useI18n } from "@/lib/i18n";
+import { Moon, Settings, LogOut } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated")({
   component: AuthedLayout,
 });
 
-function LangSwitch() {
-  const { locale, setLocale } = useI18n();
-  return (
-    <div className="inline-flex rounded-full border border-border bg-card/60 p-0.5 text-xs">
-      {(["pt", "en"] as Locale[]).map((l) => (
-        <button key={l} onClick={() => setLocale(l)} className={`px-2.5 py-0.5 rounded-full transition ${locale === l ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>
-          {l.toUpperCase()}
-        </button>
-      ))}
-    </div>
-  );
-}
 
 function AuthedLayout() {
   const { user, loading } = useAuth();
