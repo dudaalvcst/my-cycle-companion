@@ -216,9 +216,11 @@ export function CycleCalendar({
           const label = `${format(day, "PP", { locale: dfLocale })} — ${t(PHASE_KEYS[phase])}${isOvu ? ` · ${t("calendar.ovulation")}` : ""}${inPeriod ? ` · ${t("calendar.periodDay")}` : ""}${showAsPrediction ? ` · ${t("calendar.prediction")}` : ""}`;
           const baseBg = isOvu
             ? `radial-gradient(circle at center, ${ovuColor} 0%, ${ovuColor} 55%, color-mix(in oklch, ${color} 30%, transparent) 100%)`
+            : inPeriod
+            ? `color-mix(in oklch, ${PHASE_TOKENS.menstrual} ${inMonth ? 72 : 40}%, transparent)`
             : inMonth
-            ? `color-mix(in oklch, ${color} ${inPeriod ? 55 : showAsPrediction ? 12 : 22}%, transparent)`
-            : `color-mix(in oklch, ${color} ${inPeriod ? 30 : 8}%, transparent)`;
+            ? `color-mix(in oklch, ${color} ${showAsPrediction ? 12 : 22}%, transparent)`
+            : `color-mix(in oklch, ${color} 8%, transparent)`;
           return (
             <button
               key={day.toISOString()}
@@ -234,6 +236,8 @@ export function CycleCalendar({
                   background: baseBg,
                   color: isOvu
                     ? "var(--primary-foreground)"
+                    : inPeriod
+                    ? "var(--foreground)"
                     : inMonth
                     ? undefined
                     : "var(--muted-foreground)",
@@ -242,21 +246,21 @@ export function CycleCalendar({
                     : isOvu
                     ? `0 4px 14px color-mix(in oklch, ${ovuColor} 45%, transparent)`
                     : inPeriod
-                    ? `inset 0 0 0 2px ${PHASE_TOKENS.menstrual}`
+                    ? `inset 0 0 0 2.5px ${PHASE_TOKENS.menstrual}, 0 2px 8px color-mix(in oklch, ${PHASE_TOKENS.menstrual} 35%, transparent)`
                     : undefined,
-                  outline: showAsPrediction && !isOvu ? `1px dashed color-mix(in oklch, ${color} 70%, transparent)` : undefined,
-                  outlineOffset: showAsPrediction && !isOvu ? "-3px" : undefined,
-                  fontWeight: isToday || isOvu || inPeriod ? 600 : 400,
+                  outline: showAsPrediction && !isOvu && !inPeriod ? `1px dashed color-mix(in oklch, ${color} 70%, transparent)` : undefined,
+                  outlineOffset: showAsPrediction && !isOvu && !inPeriod ? "-3px" : undefined,
+                  fontWeight: isToday || isOvu || inPeriod ? 700 : 400,
                   opacity: inMonth ? 1 : 0.55,
                 }}
               >
                 {format(day, "d")}
                 {inPeriod && (
                   <span
-                    className="absolute bottom-1.5 h-1.5 w-1.5 rounded-full"
+                    className="absolute bottom-1.5 h-2 w-2 rounded-full"
                     style={{
                       background: PHASE_TOKENS.menstrual,
-                      boxShadow: `0 0 0 1.5px var(--color-background)`,
+                      boxShadow: `0 0 0 2px var(--color-background)`,
                     }}
                     aria-hidden
                   />
