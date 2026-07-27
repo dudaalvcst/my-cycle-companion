@@ -297,6 +297,17 @@ export function CycleCalendar({
           />
           <span className="text-muted-foreground">{t("calendar.prediction")}</span>
         </div>
+        <div className="inline-flex items-center gap-1.5">
+          <span
+            className="inline-block h-3 w-3 rounded-full"
+            style={{
+              background: PHASE_TOKENS.menstrual,
+              boxShadow: `inset 0 0 0 1.5px var(--color-background), 0 0 0 1.5px ${PHASE_TOKENS.menstrual}`,
+            }}
+            aria-hidden
+          />
+          <span className="text-muted-foreground">{t("calendar.periodDay")}</span>
+        </div>
       </div>
 
       <p className="mt-4 text-xs text-muted-foreground">{t("disclaimer")}</p>
