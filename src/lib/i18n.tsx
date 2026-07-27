@@ -114,6 +114,7 @@ const PT: Dict = {
   "calendar.saved": "Ciclo atualizado",
   "calendar.remove": "Remover este registro",
   "calendar.removed": "Registro removido",
+  "calendar.periodDay": "Dia de sangramento",
   "phase.menstrual": "Fase Menstrual",
   "phase.follicular": "Fase Folicular",
   "phase.ovulatory": "Fase Ovulatória",
