@@ -209,14 +209,16 @@ export function CycleCalendar({
           const predicted = isPredictedDate(logs, settings, day);
           const isFuture = isAfter(startOfDay(day), today);
           const showAsPrediction = predicted && isFuture;
+          const dayStart = startOfDay(day);
+          const inPeriod = periodRanges.some((r) => dayStart >= r.start && dayStart <= r.end);
           const color = PHASE_TOKENS[phase];
           const ovuColor = PHASE_TOKENS.ovulatory;
-          const label = `${format(day, "PP", { locale: dfLocale })} — ${t(PHASE_KEYS[phase])}${isOvu ? ` · ${t("calendar.ovulation")}` : ""}${showAsPrediction ? ` · ${t("calendar.prediction")}` : ""}`;
+          const label = `${format(day, "PP", { locale: dfLocale })} — ${t(PHASE_KEYS[phase])}${isOvu ? ` · ${t("calendar.ovulation")}` : ""}${inPeriod ? ` · ${t("calendar.periodDay")}` : ""}${showAsPrediction ? ` · ${t("calendar.prediction")}` : ""}`;
           const baseBg = isOvu
             ? `radial-gradient(circle at center, ${ovuColor} 0%, ${ovuColor} 55%, color-mix(in oklch, ${color} 30%, transparent) 100%)`
             : inMonth
-            ? `color-mix(in oklch, ${color} ${showAsPrediction ? 12 : 22}%, transparent)`
-            : `color-mix(in oklch, ${color} 8%, transparent)`;
+            ? `color-mix(in oklch, ${color} ${inPeriod ? 55 : showAsPrediction ? 12 : 22}%, transparent)`
+            : `color-mix(in oklch, ${color} ${inPeriod ? 30 : 8}%, transparent)`;
           return (
             <button
               key={day.toISOString()}
@@ -239,14 +241,26 @@ export function CycleCalendar({
                     ? `inset 0 0 0 2px var(--foreground)`
                     : isOvu
                     ? `0 4px 14px color-mix(in oklch, ${ovuColor} 45%, transparent)`
+                    : inPeriod
+                    ? `inset 0 0 0 2px ${PHASE_TOKENS.menstrual}`
                     : undefined,
                   outline: showAsPrediction && !isOvu ? `1px dashed color-mix(in oklch, ${color} 70%, transparent)` : undefined,
                   outlineOffset: showAsPrediction && !isOvu ? "-3px" : undefined,
-                  fontWeight: isToday || isOvu ? 600 : 400,
+                  fontWeight: isToday || isOvu || inPeriod ? 600 : 400,
                   opacity: inMonth ? 1 : 0.55,
                 }}
               >
                 {format(day, "d")}
+                {inPeriod && (
+                  <span
+                    className="absolute bottom-1.5 h-1.5 w-1.5 rounded-full"
+                    style={{
+                      background: PHASE_TOKENS.menstrual,
+                      boxShadow: `0 0 0 1.5px var(--color-background)`,
+                    }}
+                    aria-hidden
+                  />
+                )}
               </div>
             </button>
           );
