@@ -6,10 +6,11 @@ export const Route = createFileRoute("/_authenticated/settings")({
   component: SettingsPage,
 });
 
-type Theme = "lilac" | "rose" | "ocean" | "forest" | "sunset";
+type Theme = "lilac" | "pink" | "rose" | "ocean" | "forest" | "sunset";
 
 const THEMES: { id: Theme; swatches: string[] }[] = [
   { id: "lilac", swatches: ["#c9b8e8", "#8b6fc9", "#5e3a9e", "#f0eaff"] },
+  { id: "pink", swatches: ["#fbd0e0", "#f5a3c7", "#d96baa", "#fff0f6"] },
   { id: "rose", swatches: ["#f5c9c0", "#e88a7c", "#c94a3a", "#fff0ec"] },
   { id: "ocean", swatches: ["#b8d4e8", "#6ba3c8", "#2e6b8a", "#e8f0f8"] },
   { id: "forest", swatches: ["#c0d8b0", "#7ba86a", "#3e6b34", "#eef5e8"] },
