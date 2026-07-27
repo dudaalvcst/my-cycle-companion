@@ -285,6 +285,7 @@ const EN: Dict = {
   "calendar.saved": "Cycle updated",
   "calendar.remove": "Remove this log",
   "calendar.removed": "Log removed",
+  "calendar.periodDay": "Period day",
   "phase.menstrual": "Menstrual Phase",
   "phase.follicular": "Follicular Phase",
   "phase.ovulatory": "Ovulatory Phase",
