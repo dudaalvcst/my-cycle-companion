@@ -88,6 +88,16 @@ export function CycleCalendar({
 
   const startsSet = useMemo(() => new Set(logs.map((l) => l.start_date)), [logs]);
 
+  const periodRanges = useMemo(
+    () =>
+      logs.map((l) => {
+        const s = startOfDay(new Date(l.start_date + "T00:00:00"));
+        const e = l.end_date ? startOfDay(new Date(l.end_date + "T00:00:00")) : s;
+        return { start: s, end: e };
+      }),
+    [logs],
+  );
+
   // Find the most recent logged start <= selected (the cycle that contains selected)
   const owningStart = useMemo(() => {
     if (!selected) return null;
