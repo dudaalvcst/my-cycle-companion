@@ -93,6 +93,23 @@ function AuthPage() {
     }
   };
 
+  const signInWithGoogle = async () => {
+    setSubmitting(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/dashboard` },
+    });
+    if (error) {
+      await logAudit({ event: "AUTH_ATTEMPT", status: "FAILED" });
+      toast.error(error.message);
+    }
+    setSubmitting(false);
+  };
+
+  const toggleMode = () => {
+    navigate({ to: "/auth", search: { mode: mode === "signin" ? "signup" : "signin" } });
+  };
+
   return (
     <main className="min-h-screen flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
@@ -121,6 +138,22 @@ function AuthPage() {
               {mode === "signup" ? t("auth.signup") : t("auth.signin")}
             </Button>
           </form>
+
+          <div className="relative my-5">
+            <Separator />
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card px-2 text-xs text-muted-foreground">{t("auth.or")}</span>
+          </div>
+
+          <Button variant="outline" disabled={submitting} onClick={signInWithGoogle} className="w-full rounded-full">
+            <GoogleIcon /> <span className="ml-2">{t("auth.google")}</span>
+          </Button>
+
+          <p className="mt-5 text-center text-sm text-muted-foreground">
+            {mode === "signin" ? t("auth.noAccount") : t("auth.hasAccount")}{" "}
+            <button type="button" onClick={toggleMode} className="text-primary hover:underline">
+              {mode === "signin" ? t("auth.signup") : t("auth.signin")}
+            </button>
+          </p>
         </div>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">{t("disclaimer")}</p>
