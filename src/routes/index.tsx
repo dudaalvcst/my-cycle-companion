@@ -42,7 +42,7 @@ function LangSwitch() {
   );
 }
 
-export default function Landing() {
+function Landing() {
   const { t } = useI18n();
 
   return (
@@ -50,10 +50,10 @@ export default function Landing() {
       {/* glow decorativo */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 -top-40 h-[420px] opacity-70 blur-3xl"
+        className="builder="pointer-events-none absolute inset-x-0 -top-40 h-[420px] opacity-70 blur-3xl"
         style={{
           background:
-            "radial-gradient(40% 60% at 30% 50%, color-mix(in oklch, var(--color-phase-ovulatory) 35%, transparent), transparent), radial-gradient(40% 60% at 70% 40%, color-mix(in oklch, var(--color-phase-luteal) 25%, transparent), transparent? transparent)",
+            "radial-gradient(40% 60% at 30% 50%, color-mix(in oklch, var(--color-phase-ovulatory) 35%, transparent), transparent), radial-gradient(40% 60% at 70% 40%, color-mix(in oklch, var(--color-phase-luteal) 25%, transparent), transparent)",
         }}
       />
 
