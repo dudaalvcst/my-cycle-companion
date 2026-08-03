@@ -1,27 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useI18n, type Locale } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
-import {
-  Moon,
-  ShieldCheck,
-  Sparkles,
-  CalendarClock,
-  CheckSquare,
-  Scissors,
-  CalendarHeart,
-  ArrowRight,
-} from "lucide-react";
+import { Moon, Sparkles, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Lunaria — Sua rotina feminina em harmonia" },
+      { title: "Lunaria — Sua rotina em harmonia" },
       {
         name: "description",
         content:
           "Ciclo menstrual, agenda, tarefas, cronograma capilar e skin care em um só app privado.",
       },
-      { property: "og:title", content: "Lunaria — Sua rotina feminina em harmonia" },
+      { property: "og:title", content: "Lunaria — Sua rotina em harmonia" },
       {
         property: "og:description",
         content:
@@ -54,19 +45,8 @@ function LangSwitch() {
 function Landing() {
   const { t } = useI18n();
 
-  const modules = [
-    { I: CalendarHeart, k: "cycle", token: "phase-menstrual" },
-    { I: CalendarClock, k: "agenda", token: "phase-follicular" },
-    { I: CheckSquare, k: "tasks", token: "phase-ovulatory" },
-    { I: Scissors, k: "hair", token: "phase-luteal" },
-    { I: Sparkles, k: "skincare", token: "phase-ovulatory" },
-    { I: ShieldCheck, k: "privacy", token: "phase-follicular" },
-  ];
-
-  const steps = ["step1", "step2", "step3"];
-
   return (
-    <main className="min-h-screen overflow-hidden">
+    <main className="relative min-h-screen overflow-hidden">
       {/* glow decorativo */}
       <div
         aria-hidden
@@ -84,20 +64,14 @@ function Landing() {
           </span>
           <span className="font-display text-xl">{t("app.name")}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <LangSwitch />
-          <Link to="/auth">
-            <Button variant="ghost" size="sm">
-              {t("landing.cta.signin")}
-            </Button>
-          </Link>
-        </div>
+        <LangSwitch />
       </header>
 
-      <section className="relative mx-auto max-w-6xl px-5 pt-8 pb-16 md:pt-16 text-center">
+      <section className="relative mx-auto flex max-w-2xl flex-col items-center px-5 pt-10 pb-16 text-center md:pt-20">
         <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card/70 px-3 py-1 text-xs text-muted-foreground backdrop-blur">
           <Sparkles className="h-3 w-3" /> {t("landing.hero.badge")}
         </span>
+
         <h1 className="mt-6 font-display text-4xl sm:text-6xl md:text-7xl leading-[1.03] tracking-tight">
           {t("landing.hero.title1")}
           <br />
@@ -105,76 +79,22 @@ function Landing() {
             {t("landing.hero.title2")}
           </span>
         </h1>
-        <p className="mx-auto mt-5 max-w-xl text-sm sm:text-base text-muted-foreground">
+
+        <p className="mt-5 max-w-md text-sm sm:text-base text-muted-foreground">
           {t("landing.hero.sub")}
         </p>
-        <div className="mt-8 flex flex-col sm:flex-row justify-center gap-3">
+
+        <div className="mt-8 flex w-full max-w-sm flex-col gap-3">
           <Link to="/auth" search={{ mode: "signup" }}>
-            <Button size="lg" className="w-full sm:w-auto rounded-full px-7 gradient-primary shadow-soft">
+            <Button size="lg" className="w-full rounded-full px-7 gradient-primary shadow-soft">
               {t("landing.cta.signup")} <ArrowRight className="ml-1.5 h-4 w-4" />
             </Button>
           </Link>
           <Link to="/auth">
-            <Button size="lg" variant="outline" className="w-full sm:w-auto rounded-full px-7">
+            <Button size="lg" variant="outline" className="w-full rounded-full px-7">
               {t("landing.cta.signin")}
             </Button>
           </Link>
-        </div>
-      </section>
-
-      <section className="relative mx-auto max-w-6xl px-5 pb-20">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 text-left">
-          {modules.map(({ I, k, token }) => (
-            <div
-              key={k}
-              className="surface-card p-5 transition hover:-translate-y-0.5 hover:shadow-soft"
-              style={{
-                background: `linear-gradient(135deg, color-mix(in oklch, var(--color-${token}) 18%, var(--card)) 0%, var(--card) 70%)`,
-              }}
-            >
-              <span
-                className="inline-flex h-10 w-10 items-center justify-center rounded-full"
-                style={{ background: `color-mix(in oklch, var(--color-${token}) 30%, var(--card))` }}
-              >
-                <I className="h-5 w-5" style={{ color: `var(--color-${token})` }} />
-              </span>
-              <h3 className="mt-4 font-display text-lg">{t(`landing.mod.${k}.t`)}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{t(`landing.mod.${k}.d`)}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="relative mx-auto max-w-4xl px-5 pb-20">
-        <h2 className="text-center font-display text-2xl sm:text-3xl">{t("landing.steps.title")}</h2>
-        <ol className="mt-8 grid gap-4 sm:grid-cols-3">
-          {steps.map((s, i) => (
-            <li key={s} className="surface-card p-5">
-              <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-secondary-foreground font-display text-sm">
-                {i + 1}
-              </span>
-              <p className="mt-3 font-display text-base">{t(`landing.${s}.t`)}</p>
-              <p className="mt-1 text-sm text-muted-foreground">{t(`landing.${s}.d`)}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section className="relative mx-auto max-w-3xl px-5 pb-24 text-center">
-        <div
-          className="surface-card px-6 py-10"
-          style={{
-            background:
-              "linear-gradient(135deg, color-mix(in oklch, var(--primary) 14%, var(--card)) 0%, var(--card) 75%)",
-          }}
-        >
-          <h2 className="font-display text-2xl sm:text-3xl">{t("landing.final.title")}</h2>
-          <Link to="/auth" search={{ mode: "signup" }}>
-            <Button size="lg" className="mt-6 rounded-full px-7 gradient-primary shadow-soft">
-              {t("landing.cta.signup")}
-            </Button>
-          </Link>
-          <p className="mx-auto mt-8 max-w-lg text-xs text-muted-foreground">{t("disclaimer")}</p>
         </div>
       </section>
     </main>
