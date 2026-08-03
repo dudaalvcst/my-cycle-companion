@@ -214,8 +214,11 @@ export function CycleCalendar({
           const color = PHASE_TOKENS[phase];
           const ovuColor = PHASE_TOKENS.ovulatory;
           const label = `${format(day, "PP", { locale: dfLocale })} — ${t(PHASE_KEYS[phase])}${isOvu ? ` · ${t("calendar.ovulation")}` : ""}${inPeriod ? ` · ${t("calendar.periodDay")}` : ""}${showAsPrediction ? ` · ${t("calendar.prediction")}` : ""}`;
+          const ovuPredicted = isOvu && showAsPrediction;
           const baseBg = isOvu
-            ? `radial-gradient(circle at center, ${ovuColor} 0%, ${ovuColor} 55%, color-mix(in oklch, ${color} 30%, transparent) 100%)`
+            ? ovuPredicted
+              ? `color-mix(in oklch, ${ovuColor} 14%, transparent)`
+              : `radial-gradient(circle at center, ${ovuColor} 0%, ${ovuColor} 55%, color-mix(in oklch, ${color} 30%, transparent) 100%)`
             : inPeriod
             ? `color-mix(in oklch, ${PHASE_TOKENS.menstrual} ${inMonth ? 72 : 40}%, transparent)`
             : inMonth
