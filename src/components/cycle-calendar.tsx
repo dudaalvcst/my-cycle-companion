@@ -237,7 +237,9 @@ export function CycleCalendar({
                 className="relative flex h-full w-full items-center justify-center rounded-xl text-sm transition hover:scale-[1.04]"
                 style={{
                   background: baseBg,
-                  color: isOvu
+                  color: ovuPredicted
+                    ? undefined
+                    : isOvu
                     ? "var(--primary-foreground)"
                     : inPeriod
                     ? "var(--foreground)"
@@ -246,13 +248,18 @@ export function CycleCalendar({
                     : "var(--muted-foreground)",
                   boxShadow: isToday
                     ? `inset 0 0 0 2px var(--foreground)`
+                    : ovuPredicted
+                    ? undefined
                     : isOvu
                     ? `0 4px 14px color-mix(in oklch, ${ovuColor} 45%, transparent)`
                     : inPeriod
                     ? `inset 0 0 0 2.5px ${PHASE_TOKENS.menstrual}, 0 2px 8px color-mix(in oklch, ${PHASE_TOKENS.menstrual} 35%, transparent)`
                     : undefined,
-                  outline: showAsPrediction && !isOvu && !inPeriod ? `1px dashed color-mix(in oklch, ${color} 70%, transparent)` : undefined,
-                  outlineOffset: showAsPrediction && !isOvu && !inPeriod ? "-3px" : undefined,
+                  outline:
+                    showAsPrediction && !inPeriod
+                      ? `1px dashed color-mix(in oklch, ${isOvu ? ovuColor : color} 70%, transparent)`
+                      : undefined,
+                  outlineOffset: showAsPrediction && !inPeriod ? "-3px" : undefined,
                   fontWeight: isToday || isOvu || inPeriod ? 700 : 400,
                   opacity: inMonth ? 1 : 0.55,
                 }}
