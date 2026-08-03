@@ -10,13 +10,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Ciclo menstrual, agenda, tarefas, cronograma capilar e skin care em um só app privado.",
+          "Calendário menstrual, agenda, gerenciador de tarefas, cronograma capilar e rotina de skin care - organizados em um só lugar",
       },
       { property: "og:title", content: "Lunaria — Sua rotina em harmonia" },
       {
         property: "og:description",
         content:
-          "Ciclo menstrual, agenda, tarefas, cronograma capilar e skin care em um só app privado.",
+          "Calendário menstrual, agenda, gerenciador de tarefas, cronograma capilar e rotina de skin care - organizados em um só lugar",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
