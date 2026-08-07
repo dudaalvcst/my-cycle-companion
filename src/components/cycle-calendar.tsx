@@ -88,7 +88,6 @@ export function CycleCalendar({
 
   const startsSet = useMemo(() => new Set(logs.map((l) => l.start_date)), [logs]);
 
-
   // Find the most recent logged start <= selected (the cycle that contains selected)
   const owningStart = useMemo(() => {
     if (!selected) return null;
@@ -97,6 +96,17 @@ export function CycleCalendar({
     let owner: string | null = null;
     for (const l of sorted) if (l.start_date <= iso) owner = l.start_date;
     return owner;
+  }, [selected, logs]);
+
+  // Find any log that covers the selected day (start only, or start..end)
+  const selectedLog = useMemo(() => {
+    if (!selected) return null;
+    const iso = format(selected, "yyyy-MM-dd");
+    return logs.find((l) => {
+      if (l.start_date === iso) return true;
+      if (!l.end_date) return false;
+      return iso >= l.start_date && iso <= l.end_date;
+    }) ?? null;
   }, [selected, logs]);
 
   async function handleSetStart() {
@@ -130,12 +140,10 @@ export function CycleCalendar({
   }
 
   async function handleRemove() {
-    if (!selected || !onRemoveLog) return;
-    const iso = format(selected, "yyyy-MM-dd");
-    if (!startsSet.has(iso)) return;
+    if (!selected || !onRemoveLog || !selectedLog) return;
     setSaving(true);
     try {
-      await onRemoveLog(iso);
+      await onRemoveLog(selectedLog.start_date);
       toast.success(t("calendar.removed"));
       setSelected(null);
     } finally {
@@ -145,6 +153,7 @@ export function CycleCalendar({
 
   const selectedIso = selected ? format(selected, "yyyy-MM-dd") : null;
   const selectedIsLoggedStart = !!selectedIso && startsSet.has(selectedIso);
+  const selectedInsideLog = !!selectedLog;
   const canEndForSelected = useMemo(() => {
     if (!selected || !owningStart) return false;
     const startD = startOfDay(new Date(owningStart + "T00:00:00"));
