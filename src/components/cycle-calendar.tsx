@@ -206,7 +206,7 @@ export function CycleCalendar({
           const ovuPredicted = isOvu && showAsPrediction;
           const baseBg = isOvu
             ? ovuPredicted
-              ? `color-mix(in oklch, ${ovuColor} 14%, transparent)`
+              ? `radial-gradient(circle at center, ${ovuColor} 0%, ${ovuColor} 45%, color-mix(in oklch, ${color} 28%, transparent) 100%)`
               : `radial-gradient(circle at center, ${ovuColor} 0%, ${ovuColor} 55%, color-mix(in oklch, ${color} 30%, transparent) 100%)`
             : inMonth
             ? `color-mix(in oklch, ${color} ${showAsPrediction ? 12 : 22}%, transparent)`
@@ -224,22 +224,14 @@ export function CycleCalendar({
                 className="relative flex h-full w-full items-center justify-center rounded-xl text-sm transition hover:scale-[1.04]"
                 style={{
                   background: baseBg,
-                  color: ovuPredicted
-                    ? undefined
-                    : isOvu
-                    ? "var(--primary-foreground)"
-                    : inMonth
-                    ? undefined
-                    : "var(--muted-foreground)",
+                  color: isOvu ? "var(--primary-foreground)" : inMonth ? undefined : "var(--muted-foreground)",
                   boxShadow: isToday
                     ? `inset 0 0 0 2px var(--foreground)`
-                    : ovuPredicted
-                    ? undefined
                     : isOvu
                     ? `0 4px 14px color-mix(in oklch, ${ovuColor} 45%, transparent)`
                     : undefined,
                   outline: showAsPrediction
-                    ? `1px dashed color-mix(in oklch, ${isOvu ? ovuColor : color} 70%, transparent)`
+                    ? `2px solid color-mix(in oklch, ${isOvu ? ovuColor : color} 65%, transparent)`
                     : undefined,
                   outlineOffset: showAsPrediction ? "-3px" : undefined,
                   fontWeight: isToday || isOvu ? 700 : 400,
@@ -247,9 +239,20 @@ export function CycleCalendar({
                 }}
               >
                 {format(day, "d")}
+                {isOvu && (
+                  <span
+                    className="absolute bottom-1.5 h-1.5 w-1.5 rounded-full"
+                    style={{
+                      background: "var(--primary-foreground)",
+                      boxShadow: `0 0 0 2px ${ovuColor}`,
+                    }}
+                    aria-hidden
+                  />
+                )}
               </div>
             </button>
           );
+
         })}
       </div>
 
