@@ -88,15 +88,6 @@ export function CycleCalendar({
 
   const startsSet = useMemo(() => new Set(logs.map((l) => l.start_date)), [logs]);
 
-  const periodRanges = useMemo(
-    () =>
-      logs.map((l) => {
-        const s = startOfDay(new Date(l.start_date + "T00:00:00"));
-        const e = l.end_date ? startOfDay(new Date(l.end_date + "T00:00:00")) : s;
-        return { start: s, end: e };
-      }),
-    [logs],
-  );
 
   // Find the most recent logged start <= selected (the cycle that contains selected)
   const owningStart = useMemo(() => {
@@ -209,18 +200,14 @@ export function CycleCalendar({
           const predicted = isPredictedDate(logs, settings, day);
           const isFuture = isAfter(startOfDay(day), today);
           const showAsPrediction = predicted && isFuture;
-          const dayStart = startOfDay(day);
-          const inPeriod = periodRanges.some((r) => dayStart >= r.start && dayStart <= r.end);
           const color = PHASE_TOKENS[phase];
           const ovuColor = PHASE_TOKENS.ovulatory;
-          const label = `${format(day, "PP", { locale: dfLocale })} — ${t(PHASE_KEYS[phase])}${isOvu ? ` · ${t("calendar.ovulation")}` : ""}${inPeriod ? ` · ${t("calendar.periodDay")}` : ""}${showAsPrediction ? ` · ${t("calendar.prediction")}` : ""}`;
+          const label = `${format(day, "PP", { locale: dfLocale })} — ${t(PHASE_KEYS[phase])}${isOvu ? ` · ${t("calendar.ovulation")}` : ""}${showAsPrediction ? ` · ${t("calendar.prediction")}` : ""}`;
           const ovuPredicted = isOvu && showAsPrediction;
           const baseBg = isOvu
             ? ovuPredicted
               ? `color-mix(in oklch, ${ovuColor} 14%, transparent)`
               : `radial-gradient(circle at center, ${ovuColor} 0%, ${ovuColor} 55%, color-mix(in oklch, ${color} 30%, transparent) 100%)`
-            : inPeriod
-            ? `color-mix(in oklch, ${PHASE_TOKENS.menstrual} ${inMonth ? 72 : 40}%, transparent)`
             : inMonth
             ? `color-mix(in oklch, ${color} ${showAsPrediction ? 12 : 22}%, transparent)`
             : `color-mix(in oklch, ${color} 8%, transparent)`;
@@ -241,8 +228,6 @@ export function CycleCalendar({
                     ? undefined
                     : isOvu
                     ? "var(--primary-foreground)"
-                    : inPeriod
-                    ? "var(--foreground)"
                     : inMonth
                     ? undefined
                     : "var(--muted-foreground)",
@@ -252,34 +237,22 @@ export function CycleCalendar({
                     ? undefined
                     : isOvu
                     ? `0 4px 14px color-mix(in oklch, ${ovuColor} 45%, transparent)`
-                    : inPeriod
-                    ? `inset 0 0 0 2.5px ${PHASE_TOKENS.menstrual}, 0 2px 8px color-mix(in oklch, ${PHASE_TOKENS.menstrual} 35%, transparent)`
                     : undefined,
-                  outline:
-                    showAsPrediction && !inPeriod
-                      ? `1px dashed color-mix(in oklch, ${isOvu ? ovuColor : color} 70%, transparent)`
-                      : undefined,
-                  outlineOffset: showAsPrediction && !inPeriod ? "-3px" : undefined,
-                  fontWeight: isToday || isOvu || inPeriod ? 700 : 400,
+                  outline: showAsPrediction
+                    ? `1px dashed color-mix(in oklch, ${isOvu ? ovuColor : color} 70%, transparent)`
+                    : undefined,
+                  outlineOffset: showAsPrediction ? "-3px" : undefined,
+                  fontWeight: isToday || isOvu ? 700 : 400,
                   opacity: inMonth ? 1 : 0.55,
                 }}
               >
                 {format(day, "d")}
-                {inPeriod && (
-                  <span
-                    className="absolute bottom-1.5 h-2 w-2 rounded-full"
-                    style={{
-                      background: PHASE_TOKENS.menstrual,
-                      boxShadow: `0 0 0 2px var(--color-background)`,
-                    }}
-                    aria-hidden
-                  />
-                )}
               </div>
             </button>
           );
         })}
       </div>
+
 
       <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2 text-xs">
         {(Object.keys(PHASE_TOKENS) as Phase[]).map((p) => (
@@ -311,18 +284,8 @@ export function CycleCalendar({
           />
           <span className="text-muted-foreground">{t("calendar.prediction")}</span>
         </div>
-        <div className="inline-flex items-center gap-1.5">
-          <span
-            className="inline-block h-3 w-3 rounded-full"
-            style={{
-              background: PHASE_TOKENS.menstrual,
-              boxShadow: `inset 0 0 0 1.5px var(--color-background), 0 0 0 1.5px ${PHASE_TOKENS.menstrual}`,
-            }}
-            aria-hidden
-          />
-          <span className="text-muted-foreground">{t("calendar.periodDay")}</span>
-        </div>
       </div>
+
 
       <p className="mt-4 text-xs text-muted-foreground">{t("disclaimer")}</p>
 
