@@ -329,7 +329,7 @@ export function CycleCalendar({
             >
               {t("calendar.set.end")}
             </Button>
-            {selectedIsLoggedStart && (
+            {selectedInsideLog && (
               <Button
                 variant="ghost"
                 className="rounded-full text-destructive hover:text-destructive"
