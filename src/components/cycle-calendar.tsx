@@ -88,7 +88,6 @@ export function CycleCalendar({
 
   const startsSet = useMemo(() => new Set(logs.map((l) => l.start_date)), [logs]);
 
-
   // Find the most recent logged start <= selected (the cycle that contains selected)
   const owningStart = useMemo(() => {
     if (!selected) return null;
@@ -97,6 +96,17 @@ export function CycleCalendar({
     let owner: string | null = null;
     for (const l of sorted) if (l.start_date <= iso) owner = l.start_date;
     return owner;
+  }, [selected, logs]);
+
+  // Find any log that covers the selected day (start only, or start..end)
+  const selectedLog = useMemo(() => {
+    if (!selected) return null;
+    const iso = format(selected, "yyyy-MM-dd");
+    return logs.find((l) => {
+      if (l.start_date === iso) return true;
+      if (!l.end_date) return false;
+      return iso >= l.start_date && iso <= l.end_date;
+    }) ?? null;
   }, [selected, logs]);
 
   async function handleSetStart() {
@@ -130,12 +140,10 @@ export function CycleCalendar({
   }
 
   async function handleRemove() {
-    if (!selected || !onRemoveLog) return;
-    const iso = format(selected, "yyyy-MM-dd");
-    if (!startsSet.has(iso)) return;
+    if (!selected || !onRemoveLog || !selectedLog) return;
     setSaving(true);
     try {
-      await onRemoveLog(iso);
+      await onRemoveLog(selectedLog.start_date);
       toast.success(t("calendar.removed"));
       setSelected(null);
     } finally {
@@ -145,6 +153,7 @@ export function CycleCalendar({
 
   const selectedIso = selected ? format(selected, "yyyy-MM-dd") : null;
   const selectedIsLoggedStart = !!selectedIso && startsSet.has(selectedIso);
+  const selectedInsideLog = !!selectedLog;
   const canEndForSelected = useMemo(() => {
     if (!selected || !owningStart) return false;
     const startD = startOfDay(new Date(owningStart + "T00:00:00"));
@@ -206,11 +215,17 @@ export function CycleCalendar({
           const ovuPredicted = isOvu && showAsPrediction;
           const baseBg = isOvu
             ? ovuPredicted
-              ? `radial-gradient(circle at center, ${ovuColor} 0%, ${ovuColor} 45%, color-mix(in oklch, ${color} 28%, transparent) 100%)`
+              ? `color-mix(in oklch, ${ovuColor} 22%, transparent)`
               : `radial-gradient(circle at center, ${ovuColor} 0%, ${ovuColor} 55%, color-mix(in oklch, ${color} 30%, transparent) 100%)`
             : inMonth
             ? `color-mix(in oklch, ${color} ${showAsPrediction ? 12 : 22}%, transparent)`
             : `color-mix(in oklch, ${color} 8%, transparent)`;
+          const predictionOutline = showAsPrediction
+            ? ovuPredicted
+              ? `2px dashed color-mix(in oklch, ${ovuColor} 85%, transparent)`
+              : `1.5px dashed color-mix(in oklch, ${color} 55%, transparent)`
+            : undefined;
+          const predictionOffset = showAsPrediction ? "-2px" : undefined;
           return (
             <button
               key={day.toISOString()}
@@ -224,17 +239,15 @@ export function CycleCalendar({
                 className="relative flex h-full w-full items-center justify-center rounded-xl text-sm transition hover:scale-[1.04]"
                 style={{
                   background: baseBg,
-                  color: isOvu ? "var(--primary-foreground)" : inMonth ? undefined : "var(--muted-foreground)",
+                  color: isOvu && !ovuPredicted ? "var(--primary-foreground)" : inMonth ? undefined : "var(--muted-foreground)",
                   boxShadow: isToday
                     ? `inset 0 0 0 2px var(--foreground)`
-                    : isOvu
+                    : isOvu && !ovuPredicted
                     ? `0 4px 14px color-mix(in oklch, ${ovuColor} 45%, transparent)`
                     : undefined,
-                  outline: showAsPrediction
-                    ? `2px solid color-mix(in oklch, ${isOvu ? ovuColor : color} 65%, transparent)`
-                    : undefined,
-                  outlineOffset: showAsPrediction ? "-3px" : undefined,
-                  fontWeight: isToday || isOvu ? 700 : 400,
+                  outline: predictionOutline,
+                  outlineOffset: predictionOffset,
+                  fontWeight: isToday || (isOvu && !ovuPredicted) ? 700 : 400,
                   opacity: inMonth ? 1 : 0.55,
                 }}
               >
@@ -243,8 +256,8 @@ export function CycleCalendar({
                   <span
                     className="absolute bottom-1.5 h-1.5 w-1.5 rounded-full"
                     style={{
-                      background: "var(--primary-foreground)",
-                      boxShadow: `0 0 0 2px ${ovuColor}`,
+                      background: ovuPredicted ? ovuColor : "var(--primary-foreground)",
+                      boxShadow: ovuPredicted ? `0 0 0 1.5px color-mix(in oklch, ${ovuColor} 50%, transparent)` : `0 0 0 2px ${ovuColor}`,
                     }}
                     aria-hidden
                   />
@@ -316,7 +329,7 @@ export function CycleCalendar({
             >
               {t("calendar.set.end")}
             </Button>
-            {selectedIsLoggedStart && (
+            {selectedInsideLog && (
               <Button
                 variant="ghost"
                 className="rounded-full text-destructive hover:text-destructive"
