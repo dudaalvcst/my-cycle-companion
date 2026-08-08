@@ -159,12 +159,23 @@ export function windowForDate(
 }
 
 
+/**
+ * Ovulation is ~14 days before the next period, but it can never fall inside
+ * the bleeding days of the current cycle (happens on very short cycles).
+ * We clamp it to the day after the period ends (+1 buffer day).
+ */
+export function ovulationForWindow(w: CycleWindow): Date {
+  const idealDay = w.cycleLength - 14 + 1; // 1-indexed cycle day
+  const minDay = w.periodLength + 2;
+  const day = Math.max(idealDay, Math.min(minDay, w.cycleLength));
+  return addDays(w.start, day - 1);
+}
+
 export function phaseForDate(logs: PeriodLog[], settings: CycleSettings, date: Date): Phase {
   const w = windowForDate(logs, settings, date);
   const target = startOfDay(date);
   const cycleDay = differenceInCalendarDays(target, w.start) + 1;
-  const nextStart = addDays(w.start, w.cycleLength);
-  const ovulation = addDays(nextStart, -14);
+  const ovulation = ovulationForWindow(w);
   const fertileStart = addDays(ovulation, -3);
   const fertileEnd = addDays(ovulation, 1);
   if (cycleDay <= w.periodLength) return "menstrual";
@@ -175,9 +186,10 @@ export function phaseForDate(logs: PeriodLog[], settings: CycleSettings, date: D
 
 export function isOvulationDay(logs: PeriodLog[], settings: CycleSettings, date: Date): boolean {
   const w = windowForDate(logs, settings, date);
-  const nextStart = addDays(w.start, w.cycleLength);
-  const ovulation = addDays(nextStart, -14);
-  return differenceInCalendarDays(startOfDay(date), ovulation) === 0;
+  const target = startOfDay(date);
+  const cycleDay = differenceInCalendarDays(target, w.start) + 1;
+  if (cycleDay <= w.periodLength) return false; // never mark ovulation on bleeding days
+  return differenceInCalendarDays(target, ovulationForWindow(w)) === 0;
 }
 
 export function isPredictedDate(logs: PeriodLog[], settings: CycleSettings, date: Date): boolean {
