@@ -206,7 +206,7 @@ export function computeCycle(
   const cycleDay = differenceInCalendarDays(t, w.start) + 1;
   const nextPeriodDate = addDays(w.start, w.cycleLength);
   const daysUntilNextPeriod = differenceInCalendarDays(nextPeriodDate, t);
-  const ovulationDate = addDays(nextPeriodDate, -14);
+  const ovulationDate = ovulationForWindow(w);
   const fertileStart = addDays(ovulationDate, -3);
   const fertileEnd = addDays(ovulationDate, 1);
   const daysUntilFertile = differenceInCalendarDays(fertileStart, t);
