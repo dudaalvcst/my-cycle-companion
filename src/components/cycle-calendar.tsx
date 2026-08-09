@@ -213,21 +213,34 @@ export function CycleCalendar({
           const ovuColor = PHASE_TOKENS.ovulatory;
           const label = `${format(day, "PP", { locale: dfLocale })} — ${t(PHASE_KEYS[phase])}${isOvu ? ` · ${t("calendar.ovulation")}` : ""}${showAsPrediction ? ` · ${t("calendar.prediction")}` : ""}`;
           const ovuPredicted = isOvu && showAsPrediction;
+          const isMenstrual = phase === "menstrual";
+          const menstrualPredicted = isMenstrual && showAsPrediction;
           const baseBg = isOvu
             ? ovuPredicted
               ? `color-mix(in oklch, ${ovuColor} 18%, transparent)`
               : `radial-gradient(circle at center, color-mix(in oklch, ${ovuColor} 45%, transparent) 0%, color-mix(in oklch, ${ovuColor} 18%, transparent) 65%, transparent 100%)`
+            : isMenstrual
+            ? menstrualPredicted
+              ? `color-mix(in oklch, ${color} 18%, transparent)`
+              : `radial-gradient(circle at center, color-mix(in oklch, ${color} 45%, transparent) 0%, color-mix(in oklch, ${color} 18%, transparent) 65%, transparent 100%)`
             : inMonth
             ? `color-mix(in oklch, ${color} ${showAsPrediction ? 12 : 22}%, transparent)`
             : `color-mix(in oklch, ${color} 8%, transparent)`;
-          const predictionOutline = showAsPrediction
+          const predictionOutline = isMenstrual
+            ? menstrualPredicted
+              ? `2px dashed color-mix(in oklch, ${color} 70%, transparent)`
+              : `1.5px solid color-mix(in oklch, ${color} 50%, transparent)`
+            : showAsPrediction
             ? ovuPredicted
               ? `2px dashed color-mix(in oklch, ${ovuColor} 70%, transparent)`
               : `1.5px dashed color-mix(in oklch, ${color} 55%, transparent)`
             : isOvu
             ? `1.5px solid color-mix(in oklch, ${ovuColor} 50%, transparent)`
             : undefined;
-          const predictionOffset = showAsPrediction || isOvu ? "-2px" : undefined;
+          const predictionOffset = showAsPrediction || isOvu || isMenstrual ? "-2px" : undefined;
+          const showDot = isOvu || isMenstrual;
+          const dotColor = isOvu ? ovuColor : color;
+          const dotOpacity = (ovuPredicted || menstrualPredicted) ? 0.7 : 1;
           return (
             <button
               key={day.toISOString()}
@@ -250,12 +263,12 @@ export function CycleCalendar({
                 }}
               >
                 {format(day, "d")}
-                {isOvu && (
+                {showDot && (
                   <span
                     className="absolute bottom-1.5 h-1 w-1 rounded-full"
                     style={{
-                      background: ovuColor,
-                      opacity: ovuPredicted ? 0.7 : 1,
+                      background: dotColor,
+                      opacity: dotOpacity,
                     }}
                     aria-hidden
                   />
