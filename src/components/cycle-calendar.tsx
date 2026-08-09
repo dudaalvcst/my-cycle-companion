@@ -313,9 +313,6 @@ export function CycleCalendar({
         </div>
       </div>
 
-
-      <p className="mt-4 text-xs text-muted-foreground">{t("disclaimer")}</p>
-
       <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
