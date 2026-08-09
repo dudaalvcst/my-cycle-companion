@@ -72,8 +72,6 @@ function SettingsPage() {
           ))}
         </div>
       </section>
-
-      <p className="text-xs text-muted-foreground">{t("disclaimer")}</p>
     </div>
   );
 }
