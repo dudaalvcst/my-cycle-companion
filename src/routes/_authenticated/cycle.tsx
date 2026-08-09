@@ -266,8 +266,6 @@ function CycleAndDiary() {
             <div className="flex justify-end">
               <Button onClick={save} disabled={saving} className="rounded-full gradient-primary">{t("diary.save")}</Button>
             </div>
-
-            <p className="text-xs text-muted-foreground">{t("disclaimer")}</p>
           </div>
         </div>
 
@@ -291,6 +289,8 @@ function CycleAndDiary() {
           )}
         </aside>
       </div>
+
+      <p className="mt-8 text-center text-xs text-muted-foreground">{t("disclaimer")}</p>
     </div>
   );
 }
