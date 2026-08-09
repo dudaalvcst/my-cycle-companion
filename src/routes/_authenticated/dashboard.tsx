@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useI18n } from "@/lib/i18n";
-import { CalendarHeart, CalendarClock, CheckSquare, Scissors, Sparkles, Settings } from "lucide-react";
+import { CalendarHeart, CalendarClock, CheckSquare, Scissors, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: Home,
@@ -20,7 +20,6 @@ const TILES: Tile[] = [
   { to: "/tasks", icon: CheckSquare, labelKey: "nav.tasks", descKey: "tasks.subtitle", token: "phase-ovulatory" },
   { to: "/hair", icon: Scissors, labelKey: "nav.hair", descKey: "hair.subtitle", token: "phase-luteal" },
   { to: "/skincare", icon: Sparkles, labelKey: "nav.skincare", descKey: "skincare.subtitle", token: "phase-ovulatory" },
-  { to: "/settings", icon: Settings, labelKey: "nav.settings", descKey: "home.settings.desc", token: "phase-follicular" },
 ];
 
 function Home() {
