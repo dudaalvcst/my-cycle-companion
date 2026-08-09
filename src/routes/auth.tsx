@@ -158,6 +158,8 @@ function AuthPage() {
             </button>
           </p>
         </div>
+
+        <p className="mt-6 text-center text-xs text-muted-foreground">{t("disclaimer")}</p>
       </div>
     </main>
   );

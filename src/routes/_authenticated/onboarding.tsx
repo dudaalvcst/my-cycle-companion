@@ -96,6 +96,8 @@ function Onboarding() {
             </Button>
           )}
         </div>
+
+        <p className="mt-8 text-xs text-muted-foreground">{t("disclaimer")}</p>
       </div>
     </div>
   );
