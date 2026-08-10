@@ -59,8 +59,8 @@ function AuthedLayout() {
       <header className="sticky top-0 z-30 backdrop-blur bg-background/70 border-b border-border">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3">
           <Link to="/dashboard" className="flex items-center gap-2">
-            <img src={logoAsset.url} alt={t("app.name")} className="h-8 w-8 rounded-full object-cover" />
-            <span className="font-display text-lg">{t("app.name")}</span>
+            <img src={logoAsset.url} alt={t("app.name")} className="h-8 w-8 rounded-full object-cover logo-ring" />
+            <span className="font-display text-lg logo-text">{t("app.name")}</span>
           </Link>
           <div className="flex items-center gap-2">
             {!isOnboarding && (
