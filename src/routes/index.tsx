@@ -60,8 +60,8 @@ function Landing() {
 
       <header className="relative mx-auto flex max-w-6xl items-center justify-between px-5 py-6">
         <div className="flex items-center gap-2">
-          <img src={logoAsset.url} alt={t("app.name")} className="h-9 w-9 rounded-full object-cover shadow-soft" />
-          <span className="font-display text-xl">{t("app.name")}</span>
+          <img src={logoAsset.url} alt={t("app.name")} className="h-9 w-9 rounded-full object-cover shadow-soft logo-ring" />
+          <span className="font-display text-xl logo-text">{t("app.name")}</span>
         </div>
         <LangSwitch />
       </header>
