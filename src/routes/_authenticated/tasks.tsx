@@ -14,9 +14,9 @@ import { Trash2, Plus } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/tasks")({
   head: () => ({
     meta: [
-      { title: "Tarefas — Lunaria" },
+      { title: "Tarefas — Três Marias" },
       { name: "description", content: "Organize suas tarefas com prioridade e prazo." },
-      { property: "og:title", content: "Tarefas — Lunaria" },
+      { property: "og:title", content: "Tarefas — Três Marias" },
       { property: "og:description", content: "Organize suas tarefas com prioridade e prazo." },
     ],
   }),

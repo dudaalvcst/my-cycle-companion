@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
-import { Moon, Settings, LogOut } from "lucide-react";
+import { Settings, LogOut } from "lucide-react";
+import logoAsset from "@/assets/logo.jpg.asset.json";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated")({
@@ -58,9 +59,7 @@ function AuthedLayout() {
       <header className="sticky top-0 z-30 backdrop-blur bg-background/70 border-b border-border">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3">
           <Link to="/dashboard" className="flex items-center gap-2">
-            <span className="inline-flex h-8 w-8 items-center justify-center rounded-full gradient-primary">
-              <Moon className="h-3.5 w-3.5" />
-            </span>
+            <img src={logoAsset.url} alt={t("app.name")} className="h-8 w-8 rounded-full object-cover" />
             <span className="font-display text-lg">{t("app.name")}</span>
           </Link>
           <div className="flex items-center gap-2">

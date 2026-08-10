@@ -72,16 +72,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lunaria — Your cycle, with clarity" },
+      { title: "Três Marias — Your cycle, with clarity" },
       { name: "description", content: "Private menstrual cycle tracking: phases, predictions and a symptom diary." },
-      { name: "author", content: "Lunaria" },
-      { property: "og:title", content: "Lunaria — Your cycle, with clarity" },
+      { name: "author", content: "Três Marias" },
+      { property: "og:title", content: "Três Marias — Your cycle, with clarity" },
       { property: "og:description", content: "Private menstrual cycle tracking: phases, predictions and a symptom diary." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
