@@ -13,9 +13,9 @@ import { Trash2, Plus, Sun, Moon } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/skincare")({
   head: () => ({
     meta: [
-      { title: "Skin Care — Lunaria" },
+      { title: "Skin Care — Três Marias" },
       { name: "description", content: "Monte sua rotina AM/PM e acompanhe seus check-ins diários." },
-      { property: "og:title", content: "Skin Care — Lunaria" },
+      { property: "og:title", content: "Skin Care — Três Marias" },
       { property: "og:description", content: "Monte sua rotina AM/PM e acompanhe seus check-ins diários." },
     ],
   }),

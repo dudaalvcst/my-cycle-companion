@@ -5,7 +5,7 @@ export type Locale = "pt" | "en";
 type Dict = Record<string, string>;
 
 const PT: Dict = {
-  "app.name": "Lunaria",
+  "app.name": "Três Marias",
   "app.tagline": "Seu ciclo, com clareza e privacidade",
   "nav.dashboard": "Painel",
   "nav.diary": "Diário",
@@ -200,7 +200,7 @@ const PT: Dict = {
 };
 
 const EN: Dict = {
-  "app.name": "Lunaria",
+  "app.name": "Três Marias",
   "app.tagline": "Your cycle, with clarity and privacy",
   "nav.dashboard": "Dashboard",
   "nav.diary": "Diary",

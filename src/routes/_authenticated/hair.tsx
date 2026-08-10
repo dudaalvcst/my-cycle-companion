@@ -13,9 +13,9 @@ import { Trash2, Plus, Droplets, Leaf, Wrench } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/hair")({
   head: () => ({
     meta: [
-      { title: "Cronograma Capilar — Lunaria" },
+      { title: "Cronograma Capilar — Três Marias" },
       { name: "description", content: "Registre hidratação, nutrição e reconstrução do seu cabelo." },
-      { property: "og:title", content: "Cronograma Capilar — Lunaria" },
+      { property: "og:title", content: "Cronograma Capilar — Três Marias" },
       { property: "og:description", content: "Registre hidratação, nutrição e reconstrução do seu cabelo." },
     ],
   }),

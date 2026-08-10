@@ -1,18 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useI18n, type Locale } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
-import { Moon, Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles, ArrowRight } from "lucide-react";
+import logoAsset from "@/assets/logo.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Lunaria — Sua rotina em harmonia" },
+      { title: "Três Marias — Sua rotina em harmonia" },
       {
         name: "description",
         content:
           "Calendário menstrual, agenda, gerenciador de tarefas, cronograma capilar e rotina de skin care - organizados em um só lugar",
       },
-      { property: "og:title", content: "Lunaria — Sua rotina em harmonia" },
+      { property: "og:title", content: "Três Marias — Sua rotina em harmonia" },
       {
         property: "og:description",
         content:
@@ -59,9 +60,7 @@ function Landing() {
 
       <header className="relative mx-auto flex max-w-6xl items-center justify-between px-5 py-6">
         <div className="flex items-center gap-2">
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full gradient-primary shadow-soft">
-            <Moon className="h-4 w-4" />
-          </span>
+          <img src={logoAsset.url} alt={t("app.name")} className="h-9 w-9 rounded-full object-cover shadow-soft" />
           <span className="font-display text-xl">{t("app.name")}</span>
         </div>
         <LangSwitch />

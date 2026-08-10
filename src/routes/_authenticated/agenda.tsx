@@ -13,9 +13,9 @@ import { fmtDate } from "@/lib/cycle";
 export const Route = createFileRoute("/_authenticated/agenda")({
   head: () => ({
     meta: [
-      { title: "Agenda — Lunaria" },
+      { title: "Agenda — Três Marias" },
       { name: "description", content: "Gerencie seus compromissos e eventos pessoais." },
-      { property: "og:title", content: "Agenda — Lunaria" },
+      { property: "og:title", content: "Agenda — Três Marias" },
       { property: "og:description", content: "Gerencie seus compromissos e eventos pessoais." },
     ],
   }),
