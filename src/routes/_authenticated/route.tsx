@@ -4,7 +4,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { useI18n } from "@/lib/i18n";
 import { Settings, LogOut } from "lucide-react";
-import logoAsset from "@/assets/logo.jpg.asset.json";
+import logoAsset from "@/assets/logo-mark.png.asset.json";
+import wordmarkAsset from "@/assets/wordmark.png.asset.json";
 import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated")({
