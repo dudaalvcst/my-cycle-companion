@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import logoAsset from "@/assets/logo.jpg.asset.json";
+import logoAsset from "@/assets/logo-mark.png.asset.json";
+import wordmarkAsset from "@/assets/wordmark.png.asset.json";
 import { logAudit } from "@/lib/audit";
 
 const GoogleIcon = () => (
