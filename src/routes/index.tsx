@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useI18n, type Locale } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight } from "lucide-react";
-import logoAsset from "@/assets/logo-mark.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -60,8 +59,7 @@ function Landing() {
 
       <header className="relative mx-auto flex max-w-6xl items-center justify-between px-5 py-6">
         <div className="flex items-center gap-2">
-          <img src={logoAsset.url} alt={t("app.name")} className="h-9 w-9 rounded-full object-cover shadow-soft logo-ring" />
-          <span className="font-display text-xl logo-text">{t("app.name")}</span>
+          <span className="font-display text-2xl logo-text">{t("app.name")}</span>
         </div>
         <LangSwitch />
       </header>
