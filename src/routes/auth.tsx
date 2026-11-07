@@ -11,7 +11,6 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import logoAsset from "@/assets/logo-mark.png.asset.json";
-import wordmarkAsset from "@/assets/wordmark.png.asset.json";
 import { logAudit } from "@/lib/audit";
 
 const GoogleIcon = () => (
@@ -119,8 +118,8 @@ function AuthPage() {
     <main className="min-h-screen flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
         <Link to="/" className="flex items-center justify-center gap-2 mb-8">
-          <img src={logoAsset.url} alt={t("app.name")} className="h-9 w-9 rounded-full object-cover" />
-          <img src={wordmarkAsset.url} alt={t("app.name")} className="h-6 w-auto object-contain" />
+          <img src={logoAsset.url} alt={t("app.name")} className="h-9 w-9 rounded-full object-cover logo-ring" />
+          <span className="font-display text-xl logo-text">{t("app.name")}</span>
         </Link>
 
         <div className="surface-card p-7">
