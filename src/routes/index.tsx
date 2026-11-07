@@ -2,7 +2,6 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useI18n, type Locale } from "@/lib/i18n";
 import { Button } from "@/components/ui/button";
 import { Sparkles, ArrowRight } from "lucide-react";
-import logoAsset from "@/assets/logo-mark.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
