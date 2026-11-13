@@ -1,3 +1,3 @@
-- [ ] Restore the original logo background while keeping the wordmark transparent.
-- [ ] Combine agenda and task management in one tool, preserving existing records.
-- [ ] Support selected or written hair processes and verify persistence.
+- [x] Restore the original logo background while keeping the wordmark transparent.
+- [x] Combine agenda and task management in one tool, preserving existing records.
+- [x] Support selected or written hair processes and verify persistence.
