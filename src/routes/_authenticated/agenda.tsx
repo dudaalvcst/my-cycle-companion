@@ -9,14 +9,18 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { CalendarClock, MapPin, Trash2, Plus } from "lucide-react";
 import { fmtDate } from "@/lib/cycle";
+import { TasksPanel } from "@/components/tasks-panel";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/agenda")({
   head: () => ({
     meta: [
-      { title: "Agenda — Três Marias" },
+      { title: "Agenda e tarefas — Três Marias" },
       { name: "description", content: "Gerencie seus compromissos e eventos pessoais." },
-      { property: "og:title", content: "Agenda — Três Marias" },
+      { property: "og:title", content: "Agenda e tarefas — Três Marias" },
       { property: "og:description", content: "Gerencie seus compromissos e eventos pessoais." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: AgendaPage,
@@ -59,7 +63,7 @@ function AgendaPage() {
   async function save(e: React.FormEvent) {
     e.preventDefault();
     if (!user || !title || !startAt) return;
-    await supabase.from("agenda_events").insert({
+    const { error } = await supabase.from("agenda_events").insert({
       user_id: user.id,
       title,
       description: description || null,
@@ -67,6 +71,7 @@ function AgendaPage() {
       end_at: endAt ? new Date(endAt).toISOString() : null,
       location: location || null,
     });
+    if (error) { toast.error(error.message); return; }
     setTitle("");
     setDescription("");
     setStartAt("");
@@ -77,13 +82,14 @@ function AgendaPage() {
   }
 
   async function remove(id: string) {
-    await supabase.from("agenda_events").delete().eq("id", id);
+    const { error } = await supabase.from("agenda_events").delete().eq("id", id);
+    if (error) { toast.error(error.message); return; }
     load();
   }
 
   return (
     <div className="space-y-6">
-      <header className="flex items-center justify-between">
+      <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-display text-3xl">{t("agenda.title")}</h1>
           <p className="text-sm text-muted-foreground">{t("agenda.subtitle")}</p>
@@ -99,13 +105,13 @@ function AgendaPage() {
       {showForm && (
         <form onSubmit={save} className="surface-card p-6 space-y-4">
           <div>
-            <Label>{t("agenda.title.field")}</Label>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)} required />
+            <Label htmlFor="event-title">{t("agenda.title.field")}</Label>
+            <Input id="event-title" value={title} onChange={(e) => setTitle(e.target.value)} required />
           </div>
           <div className="grid sm:grid-cols-2 gap-3">
             <div>
-              <Label>{t("agenda.start")}</Label>
-              <Input type="datetime-local" value={startAt} onChange={(e) => setStartAt(e.target.value)} required />
+              <Label htmlFor="event-start">{t("agenda.start")}</Label>
+              <Input id="event-start" type="datetime-local" value={startAt} onChange={(e) => setStartAt(e.target.value)} required />
             </div>
             <div>
               <Label>{t("agenda.end")}</Label>
@@ -128,12 +134,13 @@ function AgendaPage() {
       )}
 
       <section className="space-y-3">
+        <h2 className="font-display text-2xl">{t("agenda.events")}</h2>
         {events.length === 0 && <p className="text-muted-foreground text-sm">{t("agenda.empty")}</p>}
         {events.map((ev) => {
           const start = new Date(ev.start_at);
           return (
             <div key={ev.id} className="surface-card p-4 flex items-start justify-between gap-3">
-              <div className="flex-1">
+              <div className="min-w-0 flex-1 break-words">
                 <div className="font-display text-lg">{ev.title}</div>
                 <div className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
                   <CalendarClock className="h-3.5 w-3.5" />
@@ -146,13 +153,14 @@ function AgendaPage() {
                 )}
                 {ev.description && <p className="text-sm mt-2 text-muted-foreground">{ev.description}</p>}
               </div>
-              <button onClick={() => remove(ev.id)} className="text-muted-foreground hover:text-destructive transition">
+              <Button variant="ghost" size="icon" title={t("common.delete")} aria-label={`${t("common.delete")} ${ev.title}`} onClick={() => remove(ev.id)} className="text-muted-foreground hover:text-destructive shrink-0">
                 <Trash2 className="h-4 w-4" />
-              </button>
+              </Button>
             </div>
           );
         })}
       </section>
+      <div className="border-t border-border pt-6"><TasksPanel /></div>
     </div>
   );
 }
