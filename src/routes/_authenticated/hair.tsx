@@ -38,7 +38,7 @@ function HairPage() {
   const { user } = useAuth();
   const { t } = useI18n();
   const [logs, setLogs] = useState<Log[]>([]);
-  const [showForm, setShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(true);
   const [entryDate, setEntryDate] = useState(new Date().toISOString().slice(0, 10));
   const [treatmentType, setTreatmentType] = useState<HairProcess>("hydration");
   const [processMode, setProcessMode] = useState<"select" | "write">("select");
@@ -80,7 +80,7 @@ function HairPage() {
     setWrittenProcess("");
     setProduct("");
     setNotes("");
-    setShowForm(false);
+    setShowForm(true);
     load();
   }
 
