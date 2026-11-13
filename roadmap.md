@@ -1,3 +1,6 @@
 - [x] Restore the original logo background while keeping the wordmark transparent.
 - [x] Combine agenda and task management in one tool, preserving existing records.
 - [x] Support selected or written hair processes and verify persistence.
+- [ ] Replace separate sections with one dated agenda containing events and tasks, with a shared creation form.
+- [ ] Show the hair process form immediately and restore the original logo in the browser icon too.
+- [ ] Verify the updated preview and explain how to update the published site.
