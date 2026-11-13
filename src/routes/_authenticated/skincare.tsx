@@ -17,6 +17,8 @@ export const Route = createFileRoute("/_authenticated/skincare")({
       { name: "description", content: "Monte sua rotina AM/PM e acompanhe seus check-ins diários." },
       { property: "og:title", content: "Skin Care — Três Marias" },
       { property: "og:description", content: "Monte sua rotina AM/PM e acompanhe seus check-ins diários." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: SkincarePage,

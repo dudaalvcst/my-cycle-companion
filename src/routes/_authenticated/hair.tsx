@@ -8,7 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Trash2, Plus, Droplets, Leaf, Wrench } from "lucide-react";
+import { Trash2, Plus, Droplets, Leaf, Wrench, Scissors } from "lucide-react";
+import { toast } from "sonner";
+import { isStandardProcess, nextHairProcess, savedHairProcess, type HairProcess } from "@/lib/hair-process";
 
 export const Route = createFileRoute("/_authenticated/hair")({
   head: () => ({
@@ -17,6 +19,8 @@ export const Route = createFileRoute("/_authenticated/hair")({
       { name: "description", content: "Registre hidratação, nutrição e reconstrução do seu cabelo." },
       { property: "og:title", content: "Cronograma Capilar — Três Marias" },
       { property: "og:description", content: "Registre hidratação, nutrição e reconstrução do seu cabelo." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: HairPage,
@@ -25,12 +29,10 @@ export const Route = createFileRoute("/_authenticated/hair")({
 type Log = {
   id: string;
   entry_date: string;
-  treatment_type: "hydration" | "nutrition" | "reconstruction";
+  treatment_type: string;
   product: string | null;
   notes: string | null;
 };
-
-const ORDER: Array<Log["treatment_type"]> = ["hydration", "nutrition", "reconstruction"];
 
 function HairPage() {
   const { user } = useAuth();
@@ -38,7 +40,10 @@ function HairPage() {
   const [logs, setLogs] = useState<Log[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [entryDate, setEntryDate] = useState(new Date().toISOString().slice(0, 10));
-  const [treatmentType, setTreatmentType] = useState<Log["treatment_type"]>("hydration");
+  const [treatmentType, setTreatmentType] = useState<HairProcess>("hydration");
+  const [processMode, setProcessMode] = useState<"select" | "write">("select");
+  const [writtenProcess, setWrittenProcess] = useState("");
+  const [saving, setSaving] = useState(false);
   const [product, setProduct] = useState("");
   const [notes, setNotes] = useState("");
 
@@ -60,13 +65,19 @@ function HairPage() {
   async function save(e: React.FormEvent) {
     e.preventDefault();
     if (!user) return;
-    await supabase.from("hair_care_logs").insert({
+    const process = savedHairProcess(processMode, treatmentType, writtenProcess);
+    if (!process) return;
+    setSaving(true);
+    const { error } = await supabase.from("hair_care_logs").insert({
       user_id: user.id,
       entry_date: entryDate,
-      treatment_type: treatmentType,
+      treatment_type: process,
       product: product || null,
       notes: notes || null,
     });
+    setSaving(false);
+    if (error) { toast.error(error.message); return; }
+    setWrittenProcess("");
     setProduct("");
     setNotes("");
     setShowForm(false);
@@ -74,16 +85,15 @@ function HairPage() {
   }
 
   async function remove(id: string) {
-    await supabase.from("hair_care_logs").delete().eq("id", id);
+    const { error } = await supabase.from("hair_care_logs").delete().eq("id", id);
+    if (error) { toast.error(error.message); return; }
     load();
   }
 
   // Compute next recommended step
-  const last = logs[0]?.treatment_type;
-  const nextIdx = last ? (ORDER.indexOf(last) + 1) % ORDER.length : 0;
-  const nextStep = ORDER[nextIdx];
+  const nextStep = nextHairProcess(logs);
 
-  const ICON: Record<Log["treatment_type"], any> = {
+  const ICON = {
     hydration: Droplets,
     nutrition: Leaf,
     reconstruction: Wrench,
@@ -92,7 +102,7 @@ function HairPage() {
 
   return (
     <div className="space-y-6">
-      <header className="flex items-center justify-between">
+      <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="font-display text-3xl">{t("hair.title")}</h1>
           <p className="text-sm text-muted-foreground">{t("hair.subtitle")}</p>
@@ -122,15 +132,23 @@ function HairPage() {
               <Input type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} required />
             </div>
             <div>
-              <Label>{t("hair.type")}</Label>
-              <Select value={treatmentType} onValueChange={(v) => setTreatmentType(v as any)}>
-                <SelectTrigger><SelectValue /></SelectTrigger>
+              <Label htmlFor="hair-process">{t("hair.type")}</Label>
+              <div className="flex gap-2 my-2" role="group" aria-label={t("hair.type")}>
+                <Button type="button" size="sm" variant={processMode === "select" ? "default" : "outline"} aria-pressed={processMode === "select"} onClick={() => setProcessMode("select")}>{t("hair.select")}</Button>
+                <Button type="button" size="sm" variant={processMode === "write" ? "default" : "outline"} aria-pressed={processMode === "write"} onClick={() => setProcessMode("write")}>{t("hair.write")}</Button>
+              </div>
+              {processMode === "write" ? (
+                <Input id="hair-process" value={writtenProcess} onChange={(e) => setWrittenProcess(e.target.value)} required />
+              ) : (
+              <Select value={treatmentType} onValueChange={(v) => { if (isStandardProcess(v)) setTreatmentType(v); }}>
+                <SelectTrigger id="hair-process"><SelectValue /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="hydration">{t("hair.type.hydration")}</SelectItem>
                   <SelectItem value="nutrition">{t("hair.type.nutrition")}</SelectItem>
                   <SelectItem value="reconstruction">{t("hair.type.reconstruction")}</SelectItem>
                 </SelectContent>
               </Select>
+              )}
             </div>
           </div>
           <div>
@@ -142,7 +160,7 @@ function HairPage() {
             <Textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={2} />
           </div>
           <div className="flex gap-2">
-            <Button type="submit" className="rounded-full gradient-primary">{t("common.save")}</Button>
+            <Button type="submit" disabled={saving} className="rounded-full gradient-primary">{t("common.save")}</Button>
             <Button type="button" variant="ghost" onClick={() => setShowForm(false)}>{t("common.cancel")}</Button>
           </div>
         </form>
@@ -151,20 +169,21 @@ function HairPage() {
       <section className="space-y-2">
         {logs.length === 0 && <p className="text-muted-foreground text-sm">{t("hair.empty")}</p>}
         {logs.map((log) => {
-          const Icon = ICON[log.treatment_type];
+          const standard = isStandardProcess(log.treatment_type);
+          const Icon = isStandardProcess(log.treatment_type) ? ICON[log.treatment_type] : Scissors;
           return (
             <div key={log.id} className="surface-card p-4 flex items-start gap-3">
               <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-accent shrink-0">
                 <Icon className="h-4 w-4" />
               </span>
-              <div className="flex-1">
-                <div className="font-medium">{t(`hair.type.${log.treatment_type}`)}</div>
+              <div className="min-w-0 flex-1 break-words">
+                <div className="font-medium">{standard ? t(`hair.type.${log.treatment_type}`) : log.treatment_type}</div>
                 <div className="text-xs text-muted-foreground">{log.entry_date}{log.product ? ` · ${log.product}` : ""}</div>
                 {log.notes && <p className="text-sm mt-1 text-muted-foreground">{log.notes}</p>}
               </div>
-              <button onClick={() => remove(log.id)} className="text-muted-foreground hover:text-destructive transition">
+              <Button variant="ghost" size="icon" aria-label={`${t("common.delete")} ${standard ? t(`hair.type.${log.treatment_type}`) : log.treatment_type}`} title={t("common.delete")} onClick={() => remove(log.id)} className="text-muted-foreground hover:text-destructive shrink-0">
                 <Trash2 className="h-4 w-4" />
-              </button>
+              </Button>
             </div>
           );
         })}

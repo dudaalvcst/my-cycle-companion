@@ -24,6 +24,14 @@ import { Droplet, Sparkles, Flower2, Moon as MoonIcon } from "lucide-react";
 import { CycleCalendar } from "@/components/cycle-calendar";
 
 export const Route = createFileRoute("/_authenticated/cycle")({
+  head: () => ({ meta: [
+    { title: "Calendário menstrual — Três Marias" },
+    { name: "description", content: "Acompanhe suas fases e registre seu diário menstrual." },
+    { property: "og:title", content: "Calendário menstrual — Três Marias" },
+    { property: "og:description", content: "Acompanhe suas fases e registre seu diário menstrual." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: CycleAndDiary,
 });
 

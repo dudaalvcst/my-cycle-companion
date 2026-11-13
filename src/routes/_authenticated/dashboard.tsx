@@ -1,8 +1,16 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useI18n } from "@/lib/i18n";
-import { CalendarHeart, CalendarClock, CheckSquare, Scissors, Sparkles } from "lucide-react";
+import { CalendarHeart, CalendarClock, Scissors, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
+  head: () => ({ meta: [
+    { title: "Início — Três Marias" },
+    { name: "description", content: "Organize seu calendário menstrual, agenda, tarefas e cuidados pessoais." },
+    { property: "og:title", content: "Início — Três Marias" },
+    { property: "og:description", content: "Organize seu calendário menstrual, agenda, tarefas e cuidados pessoais." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: Home,
 });
 
@@ -17,7 +25,6 @@ type Tile = {
 const TILES: Tile[] = [
   { to: "/cycle", icon: CalendarHeart, labelKey: "home.cycle", descKey: "home.cycle.desc", token: "phase-menstrual" },
   { to: "/agenda", icon: CalendarClock, labelKey: "nav.agenda", descKey: "agenda.subtitle", token: "phase-follicular" },
-  { to: "/tasks", icon: CheckSquare, labelKey: "nav.tasks", descKey: "tasks.subtitle", token: "phase-ovulatory" },
   { to: "/hair", icon: Scissors, labelKey: "nav.hair", descKey: "hair.subtitle", token: "phase-luteal" },
   { to: "/skincare", icon: Sparkles, labelKey: "nav.skincare", descKey: "skincare.subtitle", token: "phase-ovulatory" },
 ];

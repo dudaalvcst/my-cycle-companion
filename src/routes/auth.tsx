@@ -30,7 +30,11 @@ export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
       { title: "Três Marias — Sign in" },
-      { name: "description", content: "Sign in to your private cycle tracker." },
+      { name: "description", content: "Entre para organizar sua rotina no Três Marias." },
+      { property: "og:title", content: "Entrar — Três Marias" },
+      { property: "og:description", content: "Entre para organizar sua rotina no Três Marias." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: AuthPage,
