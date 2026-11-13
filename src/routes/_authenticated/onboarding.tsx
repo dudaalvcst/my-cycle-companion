@@ -11,6 +11,14 @@ import { toast } from "sonner";
 import { logAudit } from "@/lib/audit";
 
 export const Route = createFileRoute("/_authenticated/onboarding")({
+  head: () => ({ meta: [
+    { title: "Configuração inicial — Três Marias" },
+    { name: "description", content: "Personalize as previsões do seu calendário menstrual." },
+    { property: "og:title", content: "Configuração inicial — Três Marias" },
+    { property: "og:description", content: "Personalize as previsões do seu calendário menstrual." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: Onboarding,
 });
 

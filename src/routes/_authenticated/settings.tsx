@@ -3,6 +3,14 @@ import { useEffect, useState } from "react";
 import { useI18n, type Locale } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_authenticated/settings")({
+  head: () => ({ meta: [
+    { title: "Ajustes — Três Marias" },
+    { name: "description", content: "Personalize o idioma e a paleta de cores do Três Marias." },
+    { property: "og:title", content: "Ajustes — Três Marias" },
+    { property: "og:description", content: "Personalize o idioma e a paleta de cores do Três Marias." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: SettingsPage,
 });
 

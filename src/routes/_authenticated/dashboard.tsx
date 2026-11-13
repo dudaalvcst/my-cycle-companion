@@ -3,6 +3,14 @@ import { useI18n } from "@/lib/i18n";
 import { CalendarHeart, CalendarClock, Scissors, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
+  head: () => ({ meta: [
+    { title: "Início — Três Marias" },
+    { name: "description", content: "Organize seu calendário menstrual, agenda, tarefas e cuidados pessoais." },
+    { property: "og:title", content: "Início — Três Marias" },
+    { property: "og:description", content: "Organize seu calendário menstrual, agenda, tarefas e cuidados pessoais." },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary" },
+  ] }),
   component: Home,
 });
 
